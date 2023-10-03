@@ -10,6 +10,7 @@
     --borders: #29292f;
     --lights: #f8722e;
     --lights-border: #c15b29;
+    --doors: #f5c45e;
 
     --gradient: #a1b5bc;
     --gradient-dark: #8198a0;
@@ -168,16 +169,6 @@ body {
     border-top: 1px solid var(--window-top-shade);
 }
 
-.door__panel-handle {
-    position: absolute;
-    top: 57%;
-    height: 7px;
-    width: 100%;
-    background-color: var(--wall-second);
-    border-top: 1px solid var(--window-top-shade);
-    border-bottom: 1px solid var(--window-top-shade);
-}
-
 .bus__doors {
     position: relative;
 }
@@ -194,7 +185,18 @@ body {
     height: 160px;
     width: 72px;
 
+    background-color: var(--doors);
     border: 3px solid var(--borders)
+}
+
+.door__panel-handle {
+    position: absolute;
+    top: 57%;
+    height: 7px;
+    width: 100%;
+    background-color: var(--doors);
+    border-top: 1px solid var(--window-top-shade);
+    border-bottom: 1px solid var(--window-top-shade);
 }
 
 .bus__door--first {

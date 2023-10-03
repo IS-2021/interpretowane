@@ -1,0 +1,44 @@
+:root {
+    --background: #fff;
+    --wall-first: #f5c95f;
+    --wall-second: #f3b65e;
+    --wall-third: #f2aa59;
+}
+
+body {
+    background-color: var(--background);
+}
+
+.container {
+    display: grid;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+    outline: 2px solid red;
+}
+
+.bus {
+    width: 600px;
+}
+
+.bus__walls {
+    /*display: flex;*/
+    /*flex-direction: column;*/
+}
+
+.bus__wall {
+    height: 60px;
+}
+
+.bus__wall--first {
+    height: 80px;
+    background-color: var(--wall-first);
+}
+
+.bus__wall--second {
+    background-color: var(--wall-second);
+}
+
+.bus__wall--third {
+    background-color: var(--wall-third);
+}

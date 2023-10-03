@@ -8,6 +8,8 @@
     --roof: #fbef9e;
     --roof-shade: #e4cc74;
     --borders: #29292f;
+    --lights: #f8722e;
+    --lights-border: #c15b29;
 
     --gradient: #a1b5bc;
     --gradient-dark: #8198a0;
@@ -101,6 +103,20 @@ body {
     border-radius: 2rem 0 0 1rem / 40% 50%;
 }
 
+.bus__front-light {
+    position: absolute;
+    top: 140px;
+
+    width: 8px;
+    height: 10px;
+
+    transform: rotate(20deg);
+
+    background-color: var(--lights);
+    border-bottom: 2px solid var(--lights-border);
+    border-radius: 2px 2px 1px 1px;
+}
+
 .bus__walls {
     flex-grow: 1;
 }
@@ -191,4 +207,29 @@ body {
 
 .bus__door--third {
     right: 43px;
+}
+
+.side__lights {
+    position: relative;
+}
+
+.side__light {
+    position: absolute;
+    top: 24px;
+
+    width: 6px;
+    height: 6px;
+
+    background-color: var(--lights);
+    border-radius: 40px;
+}
+
+.side__light--first {
+    left: 128px;
+}
+.side__light--second {
+    left: 290px;
+}
+.side__light--third {
+    left: 546px;
 }

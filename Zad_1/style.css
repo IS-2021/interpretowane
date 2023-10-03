@@ -8,6 +8,25 @@
     --roof: #fbef9e;
     --roof-shade: #e4cc74;
     --borders: #29292f;
+
+    --gradient: #a1b5bc;
+    --gradient-dark: #8198a0;
+    --gradient-darker: #658087;
+
+    --window-top-shade: #5d7280;
+    --window-gradient: linear-gradient(
+        10deg,
+        var(--gradient-darker),
+        var(--gradient-darker) 16%,
+        var(--gradient-dark) 16%,
+        var(--gradient-dark) 25%,
+        var(--gradient) 25%,
+        var(--gradient) 40%,
+        var(--gradient-dark) 40%,
+        var(--gradient-dark) 70%,
+        var(--gradient) 70%,
+        var(--gradient)
+    );
 }
 
 body {
@@ -64,8 +83,22 @@ body {
     background-color: var(--bus-end);
 }
 .bus__front {
+    position: relative;
     width: 15px;
     background-color: var(--bus-front);
+}
+
+.bus__front-window {
+    position: absolute;
+    top: 20px;
+
+    width: 100%;
+    height: 100px;
+    background: var(--window-gradient);
+
+    border: 3px solid var(--borders);
+    border-right: none;
+    border-radius: 2rem 0 0 1rem / 40% 50%;
 }
 
 .bus__walls {
@@ -85,4 +118,77 @@ body {
 .bus__wall--third {
     height: 60px;
     background-color: var(--wall-third);
+}
+
+.bus__windows {
+    display: flex;
+    padding-top: 4px;
+    padding-left: 4px;
+    height: 100%;
+    gap: 4px;
+}
+
+.window {
+    border: 2px solid var(--borders);
+    border-radius: 8px;
+    width: 86px;
+    background: var(--window-gradient);
+}
+
+.window--end {
+    width: 40px;
+}
+
+.door-gap {
+    width: 72px;
+}
+
+.door__panel {
+    position: relative;
+    width: 100%;
+    margin: 4px 3px;
+
+    background: var(--window-gradient);
+    border-top: 1px solid var(--window-top-shade);
+}
+
+.door__panel-handle {
+    position: absolute;
+    top: 57%;
+    height: 7px;
+    width: 100%;
+    background-color: var(--wall-second);
+    border-top: 1px solid var(--window-top-shade);
+    border-bottom: 1px solid var(--window-top-shade);
+}
+
+.bus__doors {
+    position: relative;
+}
+
+.bus__door-spacer {
+    border-right: 3px solid var(--borders);
+}
+
+.bus__door {
+    position: absolute;
+    top: 8px;
+
+    display: flex;
+    height: 160px;
+    width: 72px;
+
+    border: 3px solid var(--borders)
+}
+
+.bus__door--first {
+    left: 48px;
+}
+
+.bus__door--second {
+    right: 299px;
+}
+
+.bus__door--third {
+    right: 43px;
 }

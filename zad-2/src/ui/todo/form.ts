@@ -1,4 +1,4 @@
-import { type TodoItem } from "@/todoListTasks.ts";
+import { type TodoItem } from "@/model/todo.ts";
 
 type TodoItemFormData = {
   inputTitle: TodoItem["title"];

@@ -1,5 +1,5 @@
-import { type TodoItem } from "@/todoListTasks.ts";
 import { CloseIcon } from "@/icons.ts";
+import { type TodoItem } from "@/model/todo.ts";
 
 export class TodoListUI {
   private todoListElement: HTMLDivElement;

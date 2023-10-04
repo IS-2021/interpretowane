@@ -1,9 +1,4 @@
-export type TodoItem = {
-  title: string;
-  description: string;
-  place: string;
-  dueDate: Date;
-};
+import { type TodoItem } from "@/model/todo.ts";
 
 export const todoItems: TodoItem[] = [
   {

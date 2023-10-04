@@ -3,14 +3,7 @@ import "./scss/styles.scss";
 import { TodoListUI } from "@/ui/todo/list.ts";
 import { todoItems } from "@/todoListTasks.ts";
 import { TodoFormUI } from "@/ui/todo/form.ts";
-
-function getElement<TReturn extends Element>(selector: string): TReturn {
-  const el = document.querySelector<TReturn>(selector);
-  if (!el) {
-    throw Error(`Element with ${selector} not found.`);
-  }
-  return el;
-}
+import { getElement } from "@/utils.ts";
 
 function main() {
   const todoListElement = getElement<HTMLDivElement>("#todoListView");

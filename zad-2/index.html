@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My TODO App</title>
+</head>
+<body>
+<div id="app">
+    <div class="container py-4 px-3 mx-auto">
+        <h1>MyNotes</h1>
+
+        <form id="addTodoForm">
+            <label for="inputTitle">Title</label>
+            <input type="text" name="inputTitle" id="inputTitle"/>
+            <label for="inputDescription">Description</label>
+            <input type="text" name="inputDescription" id="inputDescription"/>
+            <label for="inputPlace">Place</label>
+            <input type="text" name="inputPlace" id="inputPlace"/>
+            <label for="inputDate">Due date</label>
+            <input type="date" name="inputDate" id="inputDate"/>
+            <button>
+                Add
+            </button>
+        </form>
+
+        <div id="todoListView"></div>
+    </div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

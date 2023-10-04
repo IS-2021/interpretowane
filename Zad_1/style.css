@@ -13,10 +13,10 @@
     --doors: #f5c45e;
     --decorative-line: #eff4f2;
     --decorative-line-gradient: linear-gradient(#bab5b0 0%, var(--decorative-line) 50%, #bab5b0 100%);
-    --wheels-bumper: #5d5d5a;
-    --wheels-bumper-inside: #2d2c2a;
-    --wheels: #545253;
-    --wheels-inner: #afafa5;
+    --wheel-bumper: #5d5d5a;
+    --wheel-bumper-inside: #2d2c2a;
+    --wheel: #545253;
+    --wheel-inner: #afafa5;
     --wheel-faceplate: #7d7c78;
 
     --gradient: #a1b5bc;
@@ -263,30 +263,85 @@ body {
     position: relative;
 }
 
-.wheel__bumper {
+.wheel__slot {
     position: absolute;
+}
+
+.wheel__slot--first {
     bottom: -5px;
     left: 150px;
+}
+
+.wheel__slot--second {
+    bottom: -5px;
+    right: 155px;
+}
+
+.wheel__bumper {
+    position: relative;
 
     width: 90px;
     height: 45px;
     padding: 8px;
 
-    background-color: var(--wheels-bumper);
+    background-color: var(--wheel-bumper);
     border-radius: 99px 99px 0 0;
 }
 
 .wheel__bumper-inner {
-    background-color: var(--wheels-bumper-inside);
+    background-color: var(--wheel-bumper-inside);
     height: 37px;
 
     border-radius: 99px 99px 0 0;
 }
 
 .wheel {
+    position: absolute;
+    top: 13px;
+    left: 13px;
+}
+
+.wheel__elements {
+    position: relative;
+}
+
+.element__tire {
+    position: absolute;
+
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+
     width: 64px;
     height: 64px;
 
-    background-color: var(--wheels);
+
+    background-color: var(--wheel-inner);
+    border: 8px solid var(--wheel);
+    border-radius: 99px;
+}
+
+.wheel__faceplate {
+    position: absolute;
+    top: 17px;
+    left: 17px;
+
+    width: 30px;
+    height: 30px;
+
+    background-color: var(--wheel);
+    border-radius: 99px;
+}
+
+.wheel__mount {
+    position: absolute;
+    top: 27px;
+    left: 27px;
+
+    width: 10px;
+    height: 10px;
+
+    background-color: var(--wheel-faceplate);
     border-radius: 99px;
 }

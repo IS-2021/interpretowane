@@ -1,11 +1,12 @@
 import { CloseIcon } from "@/icons.ts";
-import { type TodoItem } from "@/model/todo.ts";
+import { type TodoRepository } from "@/model/todoRepository.ts";
+import { type TodoItem } from "@/types.ts";
 
 export class TodoListUI {
   private todoListElement: HTMLDivElement;
-  private todos: TodoItem[];
+  private todos: TodoRepository;
 
-  constructor(todoListElement: HTMLDivElement, todos: TodoItem[]) {
+  constructor(todoListElement: HTMLDivElement, todos: TodoRepository) {
     this.todoListElement = todoListElement;
     this.todos = todos;
 
@@ -36,7 +37,7 @@ export class TodoListUI {
     const todoContent = e.target.parentElement?.textContent?.trim();
     if (!todoContent) return;
 
-    this.todos = this.todos.filter(
+    this.todos.deleteByPredicate(
       (todo) => !todoContent.includes(todo.description),
     );
     this.updateTodoList();
@@ -66,9 +67,9 @@ export class TodoListUI {
   updateTodoList() {
     this.clearList();
 
-    const todoElements = this.todos.map((todo) =>
-      this.createTodoUIElement(todo),
-    );
+    const todoElements = this.todos
+      .getTodos()
+      .map((todo) => this.createTodoUIElement(todo));
     todoElements.forEach((todoEl) => {
       this.todoListElement.appendChild(todoEl);
     });

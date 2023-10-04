@@ -1,15 +1,16 @@
 import "./scss/styles.scss";
-// import * as bootstrap from "bootstrap";
 import { TodoListUI } from "@/ui/todo/list.ts";
 import { todoItems } from "@/todoListTasks.ts";
 import { TodoFormUI } from "@/ui/todo/form.ts";
 import { getElement } from "@/utils.ts";
+import { TodoRepository } from "@/model/todoRepository.ts";
 
 function main() {
   const todoListElement = getElement<HTMLDivElement>("#todoListView");
   const todoFormElement = getElement<HTMLFormElement>("form");
 
-  const todoListUI = new TodoListUI(todoListElement, todoItems);
+  const todoRepository = new TodoRepository(todoItems);
+  const todoListUI = new TodoListUI(todoListElement, todoRepository);
   const todoFormUI = new TodoFormUI(todoFormElement);
 
   todoListUI.updateTodoList();

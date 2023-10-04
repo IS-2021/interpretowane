@@ -11,6 +11,13 @@
     --lights: #f8722e;
     --lights-border: #c15b29;
     --doors: #f5c45e;
+    --decorative-line: #eff4f2;
+    --decorative-line-gradient: linear-gradient(#bab5b0 0%, var(--decorative-line) 50%, #bab5b0 100%);
+    --wheel-bumper: #5d5d5a;
+    --wheel-bumper-inside: #2d2c2a;
+    --wheel: #545253;
+    --wheel-inner: #afafa5;
+    --wheel-faceplate: #7d7c78;
 
     --gradient: #a1b5bc;
     --gradient-dark: #8198a0;
@@ -44,6 +51,7 @@ body {
 }
 
 .bus {
+    position: relative;
     width: 710px;
 }
 
@@ -133,8 +141,21 @@ body {
 }
 
 .bus__wall--third {
+    position: relative;
+    z-index: -10;
     height: 60px;
     background-color: var(--wall-third);
+}
+
+.bus__decorative-line {
+    position: absolute;
+    left: 100px;
+    bottom: 24px;
+
+    width: 460px;
+    height: 4px;
+
+    background: var(--decorative-line-gradient);
 }
 
 .bus__windows {
@@ -229,9 +250,98 @@ body {
 .side__light--first {
     left: 128px;
 }
+
 .side__light--second {
     left: 290px;
 }
+
 .side__light--third {
     left: 546px;
+}
+
+.bus__wheels {
+    position: relative;
+}
+
+.wheel__slot {
+    position: absolute;
+}
+
+.wheel__slot--first {
+    bottom: -5px;
+    left: 150px;
+}
+
+.wheel__slot--second {
+    bottom: -5px;
+    right: 155px;
+}
+
+.wheel__bumper {
+    position: relative;
+
+    width: 90px;
+    height: 45px;
+    padding: 8px;
+
+    background-color: var(--wheel-bumper);
+    border-radius: 99px 99px 0 0;
+}
+
+.wheel__bumper-inner {
+    background-color: var(--wheel-bumper-inside);
+    height: 37px;
+
+    border-radius: 99px 99px 0 0;
+}
+
+.wheel {
+    position: absolute;
+    top: 13px;
+    left: 13px;
+}
+
+.wheel__elements {
+    position: relative;
+}
+
+.element__tire {
+    position: absolute;
+
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+
+    width: 64px;
+    height: 64px;
+
+
+    background-color: var(--wheel-inner);
+    border: 8px solid var(--wheel);
+    border-radius: 99px;
+}
+
+.wheel__faceplate {
+    position: absolute;
+    top: 17px;
+    left: 17px;
+
+    width: 30px;
+    height: 30px;
+
+    background-color: var(--wheel);
+    border-radius: 99px;
+}
+
+.wheel__mount {
+    position: absolute;
+    top: 27px;
+    left: 27px;
+
+    width: 10px;
+    height: 10px;
+
+    background-color: var(--wheel-faceplate);
+    border-radius: 99px;
 }

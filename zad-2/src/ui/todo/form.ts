@@ -8,21 +8,17 @@ type TodoItemFormData = {
 };
 
 export class TodoFormUI {
-  private formElement: HTMLFormElement;
+  private readonly formElement: HTMLFormElement;
 
-  constructor() {}
+  constructor(formElement: HTMLFormElement) {
+    this.formElement = formElement;
+  }
 
   /**
    * Attach to a HTMLFormElement and listen for onSubmit event.
-   * @param formElement A form element DOM node.
    * @param onSubmitCallback A callback that will receive a form data.
    */
-  attachTo(
-    formElement: HTMLFormElement,
-    onSubmitCallback: (todo: TodoItem) => void,
-  ) {
-    this.formElement = formElement;
-
+  attachToOnSubmit(onSubmitCallback: (todo: TodoItem) => void) {
     this.formElement.addEventListener("submit", (e) => {
       e.preventDefault();
       onSubmitCallback(this.getTodoFromForm());

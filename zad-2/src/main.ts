@@ -17,10 +17,10 @@ function main() {
   const todoFormElement = getElement<HTMLFormElement>("form");
 
   const todoListUI = new TodoListUI(todoListElement, todoItems);
-  const todoFormUI = new TodoFormUI();
+  const todoFormUI = new TodoFormUI(todoFormElement);
 
   todoListUI.updateTodoList();
-  todoFormUI.attachTo(todoFormElement, (todo) => {
+  todoFormUI.attachToOnSubmit((todo) => {
     todoItems.push(todo);
     todoListUI.updateTodoList();
   });

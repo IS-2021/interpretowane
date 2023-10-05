@@ -40,7 +40,7 @@ export class TodoListUI {
     this.todos.deleteByPredicate(
       (todo) => !todoContent.includes(todo.description),
     );
-    this.updateTodoList();
+    this.rerenderTodoList();
   }
 
   /**
@@ -64,12 +64,16 @@ export class TodoListUI {
   /**
    * Rerender all todos.
    */
-  updateTodoList() {
+  rerenderTodoList(filter?: string) {
     this.clearList();
 
-    const todoElements = this.todos
-      .getTodos()
-      .map((todo) => this.createTodoUIElement(todo));
+    const todoItems = filter
+      ? this.todos.getTodosBySearch(filter)
+      : this.todos.getTodos();
+
+    const todoElements = todoItems.map((todo) =>
+      this.createTodoUIElement(todo),
+    );
     todoElements.forEach((todoEl) => {
       this.todoListElement.appendChild(todoEl);
     });

@@ -12,6 +12,14 @@ export class Repository {
     return this.todos;
   }
 
+  getTodosBySearch(query: string) {
+    return this.getTodos().filter(
+      (todo) =>
+        todo.title.toLowerCase().includes(query) ||
+        todo.description.toLowerCase().includes(query),
+    );
+  }
+
   addTodo(todo: TodoItem) {
     this.todos = [...this.todos, todo];
     TodoStorage.save(this.todos);

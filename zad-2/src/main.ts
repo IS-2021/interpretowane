@@ -11,15 +11,22 @@ const defaultRepoData = !TodoStorage.exists() ? todoItems : undefined;
 function main() {
   const todoListElement = getElement<HTMLDivElement>("#todoListView");
   const todoFormElement = getElement<HTMLFormElement>("form");
+  const filterElement = getElement<HTMLInputElement>("input[name=filter]");
 
   const todoRepository = new Repository(defaultRepoData);
   const todoListUI = new TodoListUI(todoListElement, todoRepository);
   const todoFormUI = new TodoFormUI(todoFormElement);
 
-  todoListUI.updateTodoList();
+  todoListUI.rerenderTodoList();
   todoFormUI.attachToOnSubmit((todo) => {
     todoRepository.addTodo(todo);
-    todoListUI.updateTodoList();
+    todoListUI.rerenderTodoList();
+  });
+
+  filterElement.addEventListener("input", (e) => {
+    if (e.target instanceof HTMLInputElement) {
+      todoListUI.rerenderTodoList(e.target.value);
+    }
   });
 }
 

@@ -1,23 +1,19 @@
 import "./scss/styles.scss";
 import { TodoListUI } from "@/ui/todo/list.ts";
-import { todoItems } from "@/todoListTasks.ts";
 import { TodoFormUI } from "@/ui/todo/form.ts";
 import { getElement } from "@/utils.ts";
 import { Repository } from "@/model/todo/repository.ts";
-import { TodoStorage } from "@/model/todo/storage.ts";
-
-const defaultRepoData = !TodoStorage.exists() ? todoItems : undefined;
+import { JSONBin } from "@/model/todo/jsonbin.ts";
 
 function main() {
   const todoListElement = getElement<HTMLDivElement>("#todoListView");
   const todoFormElement = getElement<HTMLFormElement>("form");
   const filterElement = getElement<HTMLInputElement>("input[name=filter]");
 
-  const todoRepository = new Repository(defaultRepoData);
+  const todoRepository = new Repository();
   const todoListUI = new TodoListUI(todoListElement, todoRepository);
   const todoFormUI = new TodoFormUI(todoFormElement);
 
-  todoListUI.rerenderTodoList();
   todoFormUI.attachToOnSubmit((todo) => {
     todoRepository.addTodo(todo);
     todoListUI.rerenderTodoList();
@@ -28,6 +24,15 @@ function main() {
       todoListUI.rerenderTodoList(e.target.value);
     }
   });
+
+  JSONBin.load()
+    .then((todos) => {
+      if (todos) {
+        todoRepository.setTodos(todos);
+        todoListUI.rerenderTodoList();
+      }
+    })
+    .catch((err) => console.log(err));
 }
 
 document.addEventListener("DOMContentLoaded", main);

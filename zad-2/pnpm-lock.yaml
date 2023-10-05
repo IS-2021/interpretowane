@@ -19,6 +19,9 @@ devDependencies:
   '@types/bootstrap':
     specifier: ^5.2.7
     version: 5.2.7
+  '@types/jquery':
+    specifier: ^3.5.21
+    version: 3.5.21
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.7.4
     version: 6.7.4(@typescript-eslint/parser@6.7.4)(eslint@8.50.0)(typescript@5.2.2)
@@ -348,6 +351,12 @@ packages:
       '@popperjs/core': 2.11.8
     dev: true
 
+  /@types/jquery@3.5.21:
+    resolution: {integrity: sha512-BgCalH4OX2JcjbnD9E86L+WeN6IcCGZle+Iy0I6eOMuraAfcMb0Z1x9E51rC2Dqq+m8KexEoDBW6GIJxUPmLEg==}
+    dependencies:
+      '@types/sizzle': 2.3.4
+    dev: true
+
   /@types/json-schema@7.0.13:
     resolution: {integrity: sha512-RbSSoHliUbnXj3ny0CNFOoxrIDV6SUGyStHsvDqosw6CkdPV8TtWGlfecuK4ToyMEAql6pzNxgCFKanovUzlgQ==}
     dev: true
@@ -358,6 +367,10 @@ packages:
 
   /@types/semver@7.5.3:
     resolution: {integrity: sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==}
+    dev: true
+
+  /@types/sizzle@2.3.4:
+    resolution: {integrity: sha512-jA2llq2zNkg8HrALI7DtWzhALcVH0l7i89yhY3iBdOz6cBPeACoFq+fkQrjHA39t1hnSFOboZ7A/AY5MMZSlag==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@6.7.4(@typescript-eslint/parser@6.7.4)(eslint@8.50.0)(typescript@5.2.2):

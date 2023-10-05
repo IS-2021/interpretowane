@@ -1,11 +1,15 @@
 import { type TodoItem } from "@/types.ts";
-import { TodoStorage } from "@/model/todo/storage.ts";
+import { JSONBin } from "@/model/todo/jsonbin.ts";
 
 export class Repository {
   private todos: TodoItem[] = [];
 
   constructor(todos: TodoItem[] = []) {
-    this.todos = [...todos, ...TodoStorage.load()];
+    this.todos = todos;
+  }
+
+  private save() {
+    JSONBin.save(this.todos).catch((err) => console.error(err));
   }
 
   getTodos() {
@@ -20,13 +24,22 @@ export class Repository {
     );
   }
 
+  setTodos(todos: TodoItem[]) {
+    this.todos = todos;
+  }
+
   addTodo(todo: TodoItem) {
     this.todos = [...this.todos, todo];
-    TodoStorage.save(this.todos);
+    this.save();
+  }
+
+  addTodos(newTodos: TodoItem[]) {
+    this.todos = [...this.todos, ...newTodos];
+    this.save();
   }
 
   deleteByPredicate(predicate: (todo: TodoItem) => boolean) {
     this.todos = this.todos.filter(predicate);
-    TodoStorage.save(this.todos);
+    this.save();
   }
 }

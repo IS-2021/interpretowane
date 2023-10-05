@@ -4,6 +4,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "ESNext",
       "DOM",

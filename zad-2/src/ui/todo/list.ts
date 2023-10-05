@@ -1,12 +1,12 @@
 import { CloseIcon } from "@/icons.ts";
-import { type TodoRepository } from "@/model/todoRepository.ts";
+import { type Repository } from "@/model/todo/repository.ts";
 import { type TodoItem } from "@/types.ts";
 
 export class TodoListUI {
   private todoListElement: HTMLDivElement;
-  private todos: TodoRepository;
+  private todos: Repository;
 
-  constructor(todoListElement: HTMLDivElement, todos: TodoRepository) {
+  constructor(todoListElement: HTMLDivElement, todos: Repository) {
     this.todoListElement = todoListElement;
     this.todos = todos;
 

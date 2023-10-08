@@ -25,20 +25,52 @@
 
     --window-top-shade: #5d7280;
     --window-gradient: linear-gradient(
-        10deg,
-        var(--gradient-darker),
-        var(--gradient-darker) 16%,
-        var(--gradient-dark) 16%,
-        var(--gradient-dark) 25%,
-        var(--gradient) 25%,
-        var(--gradient) 40%,
-        var(--gradient-dark) 40%,
-        var(--gradient-dark) 70%,
-        var(--gradient) 70%,
-        var(--gradient)
+            10deg,
+            var(--gradient-darker),
+            var(--gradient-darker) 16%,
+            var(--gradient-dark) 16%,
+            var(--gradient-dark) 25%,
+            var(--gradient) 25%,
+            var(--gradient) 40%,
+            var(--gradient-dark) 40%,
+            var(--gradient-dark) 70%,
+            var(--gradient) 70%,
+            var(--gradient)
     );
 }
 
+
+/* Simple CSS Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+img, picture, svg, video {
+    display: block;
+    max-width: 100%;
+}
+
+input, textarea, button, select {
+    font: inherit;
+}
+
+/* Additional */
+* {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+}
+
+body {
+    min-height: 100svh;
+}
+
+html {
+    color-scheme: dark;
+}
+
+
+/* Styles */
 body {
     background-color: var(--background);
 }
@@ -93,6 +125,7 @@ body {
     width: 20px;
     background-color: var(--bus-end);
 }
+
 .bus__front {
     position: relative;
     width: 15px;

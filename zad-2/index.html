@@ -12,25 +12,57 @@
         <h1>MyNotes</h1>
 
         <form id="addTodoForm">
-            <label for="inputTitle">Title</label>
-            <input type="text" name="inputTitle" id="inputTitle"/>
-            <label for="inputDescription">Description</label>
-            <input type="text" name="inputDescription" id="inputDescription"/>
-            <label for="inputPlace">Place</label>
-            <input type="text" name="inputPlace" id="inputPlace"/>
-            <label for="inputDate">Due date</label>
-            <input type="date" name="inputDate" id="inputDate"/>
-            <button>
-                Add
-            </button>
+            <div class="row mb-3">
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label" for="inputTitle">Title</label>
+                            <input class="form-control" type="text" name="inputTitle" id="inputTitle"/>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="inputDescription">Description</label>
+                            <input class="form-control" type="text" name="inputDescription" id="inputDescription"/>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="inputPlace">Place</label>
+                            <input class="form-control" type="text" name="inputPlace" id="inputPlace"/>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="inputDate">Due date</label>
+                            <input class="form-control" type="date" name="inputDate" id="inputDate"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1" style="position: relative">
+                    <button class="btn btn-primary w-auto" style="position: absolute; bottom: 0;">
+                        Add
+                    </button>
+                </div>
+            </div>
         </form>
 
-        <div>
-            <label for="filter">Filter</label>
-            <input type="text" name="filter" id="filter">
+        <div class="row mb-3">
+            <div class="col-1">
+                <label class="form-label" for="filter">Filter</label>
+            </div>
+            <div class="col-11">
+                <input class="form-control" type="text" name="filter" id="filter">
+            </div>
         </div>
 
-        <div id="todoListView"></div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Place</th>
+                <th scope="col">Due Date</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody id="todoListView">
+            </tbody>
+        </table>
     </div>
 </div>
 <script type="module" src="/src/main.ts"></script>

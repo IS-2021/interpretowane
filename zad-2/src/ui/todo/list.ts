@@ -34,7 +34,8 @@ export class TodoListUI {
     const isTargetButton = e.target instanceof HTMLButtonElement;
     if (!isTargetButton) return;
 
-    const todoContent = e.target.parentElement?.textContent?.trim();
+    const todoContent =
+      e.target?.parentElement?.parentElement?.textContent?.trim();
     if (!todoContent) return;
 
     this.todos.deleteByPredicate(
@@ -48,14 +49,17 @@ export class TodoListUI {
    * @param todo A todo object.
    */
   createTodoUIElement(todo: TodoItem): HTMLDivElement {
-    const todoDiv = document.createElement("div");
+    const todoDiv = document.createElement("tr");
     todoDiv.innerHTML = `
-      <div class="todo alert alert-light fade show">
-        <p>${todo.title} ${todo.description}</p>
-        <button class="todo__button">
-            ${CloseIcon}
-        </button>
-      </div>
+        <td>${todo.title}</td>
+        <td>${todo.description}</td>
+        <td>${new Date(todo.dueDate).toLocaleString()}</td>
+        <td>${todo.place}</td>
+        <td>
+            <button class="todo__button">
+              ${CloseIcon}
+            </button>
+        </td>
     `;
 
     return todoDiv;

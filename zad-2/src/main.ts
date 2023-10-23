@@ -1,4 +1,5 @@
 import "./scss/styles.scss";
+import JQuery from "jquery";
 import { TodoListUI } from "@/ui/todo/list.ts";
 import { TodoFormUI } from "@/ui/todo/form.ts";
 import { getElement } from "@/utils.ts";
@@ -6,7 +7,7 @@ import { Repository } from "@/model/todo/repository.ts";
 import { JSONBin } from "@/model/todo/jsonbin.ts";
 
 function main() {
-  const todoListElement = getElement<HTMLDivElement>("#todoListView");
+  const todoListElement = getElement<HTMLTableElement>("#todoListView");
   const todoFormElement = getElement<HTMLFormElement>("form");
   const filterElement = getElement<HTMLInputElement>("input[name=filter]");
 
@@ -19,7 +20,7 @@ function main() {
     todoListUI.rerenderTodoList();
   });
 
-  filterElement.addEventListener("input", (e) => {
+  filterElement.on("input", (e) => {
     if (e.target instanceof HTMLInputElement) {
       todoListUI.rerenderTodoList(e.target.value);
     }
@@ -32,7 +33,8 @@ function main() {
         todoListUI.rerenderTodoList();
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 }
 
-document.addEventListener("DOMContentLoaded", main);
+// .ready is deprecated, https://api.jquery.com/ready/
+JQuery(main);

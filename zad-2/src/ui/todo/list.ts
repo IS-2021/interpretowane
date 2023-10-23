@@ -3,14 +3,14 @@ import { type Repository } from "@/model/todo/repository.ts";
 import { type TodoItem } from "@/types.ts";
 
 export class TodoListUI {
-  private todoListElement: HTMLDivElement;
+  private todoListElement: JQuery<HTMLTableElement>;
   private todos: Repository;
 
-  constructor(todoListElement: HTMLDivElement, todos: Repository) {
+  constructor(todoListElement: JQuery<HTMLTableElement>, todos: Repository) {
     this.todoListElement = todoListElement;
     this.todos = todos;
 
-    this.todoListElement.addEventListener("click", (e: Event) => {
+    this.todoListElement.on("click", (e: Event) => {
       if (e.target instanceof HTMLButtonElement) {
         this.handleTodoClick(e);
       }
@@ -21,8 +21,8 @@ export class TodoListUI {
    * Remove all items from todo-list element.
    */
   clearList() {
-    while (this.todoListElement.firstChild) {
-      this.todoListElement.removeChild(this.todoListElement.firstChild);
+    while (this.todoListElement.children(":first").length) {
+      this.todoListElement.children(":first").remove();
     }
   }
 
@@ -79,7 +79,7 @@ export class TodoListUI {
       this.createTodoUIElement(todo),
     );
     todoElements.forEach((todoEl) => {
-      this.todoListElement.appendChild(todoEl);
+      this.todoListElement.append(todoEl);
     });
   }
 }

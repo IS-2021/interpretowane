@@ -28,8 +28,9 @@ function main() {
 
   JSONBin.load()
     .then((todos) => {
-      if (todos) {
-        todoRepository.setTodos(todos);
+      const filteredTodos = todos?.filter((todo) => todo !== null);
+      if (filteredTodos) {
+        todoRepository.setTodos(filteredTodos);
         todoListUI.rerenderTodoList();
       }
     })

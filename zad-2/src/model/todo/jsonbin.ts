@@ -37,6 +37,9 @@ export class JSONBin {
   }
 
   static async save(data: TodoItem[]) {
+    // JSONBin requires the JSON to be non-empty
+    const uploadData = data.length > 0 ? data : [null];
+
     await jQuery.ajax({
       url: JSONBIN_URL,
       type: "PUT",
@@ -44,7 +47,7 @@ export class JSONBin {
         "X-ACCESS-KEY": ACCESS_KEY,
       },
       contentType: "application/json",
-      data: JSON.stringify(data),
+      data: JSON.stringify(uploadData),
       success: (data) => {
         console.log("put:success", data);
       },

@@ -1,0 +1,17 @@
+@import "bootstrap/scss/bootstrap";
+
+.todo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.todo__button {
+  background: transparent;
+  border: none;
+  height: 32px;
+  width: 32px;
+}
+
+.todo__button > svg {
+  pointer-events: none;
+}

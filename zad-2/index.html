@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My TODO App</title>
+</head>
+<body>
+<div id="app">
+    <div class="container py-4 px-3 mx-auto">
+        <h1>MyNotes</h1>
+
+        <form id="addTodoForm">
+            <div class="row mb-3">
+                <div class="col-11">
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label" for="inputTitle">Title</label>
+                            <input class="form-control" type="text" name="inputTitle" id="inputTitle"/>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="inputDescription">Description</label>
+                            <input class="form-control" type="text" name="inputDescription" id="inputDescription"/>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="inputPlace">Place</label>
+                            <input class="form-control" type="text" name="inputPlace" id="inputPlace"/>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label" for="inputDate">Due date</label>
+                            <input class="form-control" type="date" name="inputDate" id="inputDate"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1" style="position: relative">
+                    <button class="btn btn-primary w-auto" style="position: absolute; bottom: 0;">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <hr>
+        <h2>Filters</h2>
+
+        <div class="row mb-3">
+            <div class="col-6">
+                <label class="form-label" for="filterContent">Content</label>
+                <input class="form-control" type="text" name="filterContent" id="filterContent">
+            </div>
+            <div class="col-3">
+                <label class="form-label" for="filterDateFrom">From date</label>
+                <input class="form-control" type="date" name="filterDateFrom" id="filterDateFrom"/>
+            </div>
+            <div class="col-3">
+                <label class="form-label" for="filterDateTo">To date</label>
+                <input class="form-control" type="date" name="filterDateTo" id="filterDateTo"/>
+            </div>
+        </div>
+
+        <hr>
+        <h2>Todos</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Place</th>
+                <th scope="col">Due Date</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody id="todoListView">
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

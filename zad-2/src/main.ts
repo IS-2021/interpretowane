@@ -21,6 +21,9 @@ function main() {
   );
 
   // Clear inputs from start
+  if (todoFormElement[0]) {
+    todoFormElement[0].reset();
+  }
   filterElement.val("");
   filterDateFromElement.val("");
   filterDateToElement.val("");

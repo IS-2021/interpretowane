@@ -26,7 +26,6 @@ export class Repository {
 
   getTodosFromFilters(filters?: Filters) {
     let todos = this.getTodos();
-    console.log(filters);
 
     if (filters?.content) {
       const query = filters.content;

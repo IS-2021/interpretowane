@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { type TodoItem } from "@/types.ts";
 
 type TodoItemFormData = {
@@ -34,6 +35,7 @@ export class TodoFormUI {
     ) as TodoItemFormData;
 
     return {
+      id: uuidv4(),
       title: formData.inputTitle,
       description: formData.inputDescription,
       place: formData.inputPlace,

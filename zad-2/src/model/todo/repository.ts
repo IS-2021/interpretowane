@@ -42,4 +42,9 @@ export class Repository {
     this.todos = this.todos.filter(predicate);
     this.save();
   }
+
+  deleteById(todoId: TodoItem["id"]) {
+    this.todos = this.todos.filter((todo) => todo.id !== todoId);
+    this.save();
+  }
 }

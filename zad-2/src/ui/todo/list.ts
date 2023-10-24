@@ -1,6 +1,6 @@
 import { CloseIcon } from "@/icons.ts";
 import { type Repository } from "@/model/todo/repository.ts";
-import { type TodoItem } from "@/types.ts";
+import { type Filters, type TodoItem } from "@/types.ts";
 
 export class TodoListUI {
   private todoListElement: JQuery<HTMLTableElement>;
@@ -50,7 +50,6 @@ export class TodoListUI {
     todoElement.id = todo.id;
     todoElement.innerHTML = `
         <td>${todo.title}</td>
-        <td>${todo.title}</td>
         <td>${todo.description}</td>
         <td>${new Date(todo.dueDate).toLocaleString()}</td>
         <td>${todo.place}</td>
@@ -67,12 +66,10 @@ export class TodoListUI {
   /**
    * Rerender all todos.
    */
-  rerenderTodoList(filter?: string) {
+  rerenderTodoList(filters?: Filters) {
     this.clearList();
 
-    const todoItems = filter
-      ? this.todos.getTodosBySearch(filter)
-      : this.todos.getTodos();
+    const todoItems = this.todos.getTodosFromFilters(filters);
 
     const todoElements = todoItems.map((todo) =>
       this.createTodoUIElement(todo),

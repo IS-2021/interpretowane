@@ -41,15 +41,26 @@
             </div>
         </form>
 
+        <hr>
+        <h2>Filters</h2>
+
         <div class="row mb-3">
-            <div class="col-1">
-                <label class="form-label" for="filter">Filter</label>
+            <div class="col-6">
+                <label class="form-label" for="filterContent">Content</label>
+                <input class="form-control" type="text" name="filterContent" id="filterContent">
             </div>
-            <div class="col-11">
-                <input class="form-control" type="text" name="filter" id="filter">
+            <div class="col-3">
+                <label class="form-label" for="filterDateFrom">From date</label>
+                <input class="form-control" type="date" name="filterDateFrom" id="filterDateFrom"/>
+            </div>
+            <div class="col-3">
+                <label class="form-label" for="filterDateTo">To date</label>
+                <input class="form-control" type="date" name="filterDateTo" id="filterDateTo"/>
             </div>
         </div>
 
+        <hr>
+        <h2>Todos</h2>
         <table class="table">
             <thead>
             <tr>

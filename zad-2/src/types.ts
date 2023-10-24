@@ -5,3 +5,9 @@ export type TodoItem = {
   place: string;
   dueDate: Date;
 };
+
+export type Filters = {
+  content?: string;
+  fromDate?: Date | null;
+  toDate?: Date | null;
+};

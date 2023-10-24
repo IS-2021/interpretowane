@@ -1,4 +1,4 @@
-import { type TodoItem } from "@/types.ts";
+import { type Filters, type TodoItem } from "@/types.ts";
 import { JSONBin } from "@/model/todo/jsonbin.ts";
 
 export class Repository {
@@ -22,6 +22,31 @@ export class Repository {
         todo.title.toLowerCase().includes(query) ||
         todo.description.toLowerCase().includes(query),
     );
+  }
+
+  getTodosFromFilters(filters?: Filters) {
+    let todos = this.getTodos();
+    console.log(filters);
+
+    if (filters?.content) {
+      const query = filters.content;
+
+      todos = todos.filter(
+        (todo) =>
+          todo.title.toLowerCase().includes(query) ||
+          todo.description.toLowerCase().includes(query),
+      );
+    }
+
+    if (filters?.fromDate && filters?.toDate) {
+      const fromDate = filters.fromDate;
+      const toDate = filters.toDate;
+      todos = todos.filter(
+        (todo) => fromDate <= todo.dueDate && todo.dueDate <= toDate,
+      );
+    }
+
+    return todos;
   }
 
   setTodos(todos: TodoItem[]) {

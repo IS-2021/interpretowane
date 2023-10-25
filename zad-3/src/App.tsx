@@ -6,8 +6,10 @@ function App() {
     <div className="container">
       <h1>Baza filmów</h1>
       <form>
-        <div className="form-group">
-          <label htmlFor="inputTitle">Tytuł</label>
+        <div className="form-group mb-2">
+          <label htmlFor="inputTitle" className="form-label">
+            Tytuł
+          </label>
           <input
             type="text"
             id="inputTitle"
@@ -15,7 +17,8 @@ function App() {
             placeholder="Podaj tytuł lub fragment tytułu filmu"
           />
         </div>
-        <div className="form-group row">
+
+        <div className="form-group row mb-2">
           <label
             className="col-sm-4 col-form-label"
             htmlFor="inputProductionFrom"
@@ -31,6 +34,7 @@ function App() {
             />
           </div>
         </div>
+
         <div className="form-group row">
           <label
             className="col-sm-4 col-form-label"
@@ -47,8 +51,11 @@ function App() {
             />
           </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="inputCast">Obsada</label>
+
+        <div className="form-group mb-2">
+          <label htmlFor="inputCast" className="form-label">
+            Obsada
+          </label>
           <input
             type="text"
             id="inputCast"
@@ -56,7 +63,8 @@ function App() {
             placeholder="Imię i nazwisko"
           />
         </div>
-        <div className="form-group row">
+
+        <div className="form-group">
           <input
             type="button"
             className="btn btn-info col-sm-12"

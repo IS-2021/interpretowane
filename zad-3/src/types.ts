@@ -3,7 +3,7 @@ export interface Movie {
   year: number;
   cast: string[];
   genres: string[];
-  href?: string;
+  // href?: string;
   extract?: string;
   thumbnail?: string;
   thumbnail_width?: number;

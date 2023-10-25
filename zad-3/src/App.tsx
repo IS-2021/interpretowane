@@ -2,6 +2,8 @@ import moviesData from "./data/movies-2010s.json";
 import { MovieTable } from "@/components/MovieTable/MovieTable";
 
 function App() {
+  const movies = moviesData.slice(0, 100);
+
   return (
     <div className="container">
       <h1>Baza filmów</h1>
@@ -73,7 +75,7 @@ function App() {
         </div>
       </form>
 
-      {/*<MovieTable movies={} />*/}
+      <MovieTable movies={movies} />
 
       <h1>Filmy wg gatunku</h1>
 

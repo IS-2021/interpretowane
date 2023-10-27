@@ -20,7 +20,7 @@ export function MovieListByCast({ movies }: MovieListByCastProps) {
 		});
 	});
 
-	const actors = Array.from(moviesByCast.keys());
+	const actors = Array.from(moviesByCast.keys()).slice(0, 100);
 
 	return (
 		<>

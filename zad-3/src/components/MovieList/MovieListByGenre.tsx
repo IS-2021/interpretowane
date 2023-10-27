@@ -20,7 +20,7 @@ export function MovieListByGenre({ movies }: MovieListByGenreProps) {
 		});
 	});
 
-	const genres = Array.from(moviesByGenre.keys());
+	const genres = Array.from(moviesByGenre.keys()).slice(0, 100);
 
 	return (
 		<>

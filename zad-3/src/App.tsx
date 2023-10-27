@@ -1,73 +1,55 @@
+import { useState } from "react";
+import { join } from "lodash-es";
 import moviesData from "./data/movies-2010s.json";
 import { MovieListByGenre } from "@/components/MovieList/MovieListByGenre";
 import { MovieTable } from "@/components/MovieTable/MovieTable";
 import { MovieListByCast } from "@/components/MovieList/MovieListByCast";
+import { Search, type SearchFormData } from "@/components/Search/Search";
+import { type Movie } from "@/types";
 
 export function App() {
+	const [filters, setFilters] = useState<SearchFormData>({});
 	const movies = moviesData.slice(0, 100);
+
+	function filterMovies(): Movie[] {
+		let result: Movie[];
+
+		result = moviesData.filter(
+			(movie) =>
+				movie.title.toLowerCase().includes((filters.title ?? "").toLowerCase()) &&
+				join(movie.cast, " ")
+					.toLowerCase()
+					.includes((filters.cast ?? "").toLowerCase()),
+		);
+		if (filters.yearFrom && filters.yearTo) {
+			const yearFrom = filters.yearFrom;
+			const yearTo = filters.yearTo;
+			result = result.filter((movie) => yearFrom <= movie.year && movie.year <= yearTo);
+		} else if (filters.yearFrom) {
+			const yearFrom = filters.yearFrom;
+			result = result.filter((movie) => yearFrom <= movie.year);
+		} else if (filters.yearTo) {
+			const yearTo = filters.yearTo;
+			result = result.filter((movie) => movie.year <= yearTo);
+		}
+
+		return result.slice(0, 100);
+	}
+
+	const filteredMovies = filterMovies();
+
+	function onSearch(data: SearchFormData) {
+		console.log(data);
+
+		setFilters(data);
+	}
 
 	return (
 		<div className="container">
 			<h1>Baza filmów</h1>
-			<form>
-				<div className="form-group mb-2">
-					<label htmlFor="inputTitle" className="form-label">
-						Tytuł
-					</label>
-					<input
-						type="text"
-						id="inputTitle"
-						className="form-control"
-						placeholder="Podaj tytuł lub fragment tytułu filmu"
-					/>
-				</div>
+			<Search onSearch={onSearch} />
 
-				<div className="form-group row mb-2">
-					<label className="col-sm-4 col-form-label" htmlFor="inputProductionFrom">
-						Rok produkcji od:
-					</label>
-					<div className="col-sm-8">
-						<input
-							type="text"
-							id="inputProductionFrom"
-							className="form-control"
-							placeholder="Liczba naturalna z przedziału 1900-2019"
-						/>
-					</div>
-				</div>
-
-				<div className="form-group row">
-					<label className="col-sm-4 col-form-label" htmlFor="inputProductionTo">
-						Rok produkcji do:
-					</label>
-					<div className="col-sm-8">
-						<input
-							type="text"
-							id="inputProductionTo"
-							className="form-control"
-							placeholder="Liczba naturalna z przedziału 1900-2019"
-						/>
-					</div>
-				</div>
-
-				<div className="form-group mb-2">
-					<label htmlFor="inputCast" className="form-label">
-						Obsada
-					</label>
-					<input
-						type="text"
-						id="inputCast"
-						className="form-control"
-						placeholder="Imię i nazwisko"
-					/>
-				</div>
-
-				<div className="form-group">
-					<input type="button" className="btn btn-info col-sm-12" value="Szukaj" />
-				</div>
-			</form>
-
-			<MovieTable movies={movies} />
+			<MovieTable movies={filteredMovies} />
 
 			<h1>Filmy wg gatunku</h1>
 			<MovieListByGenre movies={movies} />

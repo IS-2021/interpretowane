@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { join } from "lodash-es";
+import { filter, join } from "lodash-es";
 import moviesData from "./data/movies-2010s.json";
 import { MovieListByGenre } from "@/components/MovieList/MovieListByGenre";
 import { MovieTable } from "@/components/MovieTable/MovieTable";
@@ -15,13 +15,13 @@ export function App() {
 		let result: Movie[] = moviesData;
 
 		if (filters.title) {
-			result = result.filter((movie) =>
+			result = filter(result, (movie) =>
 				movie.title.toLowerCase().includes((filters.title ?? "").toLowerCase()),
 			);
 		}
 
 		if (filters.cast) {
-			result = result.filter((movie) =>
+			result = filter(result, (movie) =>
 				join(movie.cast, " ")
 					.toLowerCase()
 					.includes((filters.cast ?? "").toLowerCase()),
@@ -31,13 +31,13 @@ export function App() {
 		if (filters.yearFrom && filters.yearTo) {
 			const yearFrom = filters.yearFrom;
 			const yearTo = filters.yearTo;
-			result = result.filter((movie) => yearFrom <= movie.year && movie.year <= yearTo);
+			result = filter(result, (movie) => yearFrom <= movie.year && movie.year <= yearTo);
 		} else if (filters.yearFrom) {
 			const yearFrom = filters.yearFrom;
-			result = result.filter((movie) => yearFrom <= movie.year);
+			result = filter(result, (movie) => yearFrom <= movie.year);
 		} else if (filters.yearTo) {
 			const yearTo = filters.yearTo;
-			result = result.filter((movie) => movie.year <= yearTo);
+			result = filter(result, (movie) => movie.year <= yearTo);
 		}
 
 		return result.slice(0, 100);

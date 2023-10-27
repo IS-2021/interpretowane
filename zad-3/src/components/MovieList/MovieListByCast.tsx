@@ -10,14 +10,12 @@ export function MovieListByCast({ movies }: MovieListByCastProps) {
 
 	movies.map((movie) => {
 		movie.cast.forEach((actor) => {
-			if (!moviesByCast.has(actor)) {
-				moviesByCast.set(actor, [movie]);
-			} else {
-				const genreMovies = moviesByCast.get(actor);
+			const actorMovies = moviesByCast.get(actor);
 
-				if (genreMovies) {
-					moviesByCast.set(actor, [movie, ...genreMovies]);
-				}
+			if (actorMovies) {
+				moviesByCast.set(actor, [movie, ...actorMovies]);
+			} else {
+				moviesByCast.set(actor, [movie]);
 			}
 		});
 	});

@@ -1,6 +1,7 @@
 import moviesData from "./data/movies-2010s.json";
 import { MovieListByGenre } from "@/components/MovieList/MovieListByGenre";
 import { MovieTable } from "@/components/MovieTable/MovieTable";
+import { MovieListByCast } from "@/components/MovieList/MovieListByCast";
 
 export function App() {
 	const movies = moviesData.slice(0, 100);
@@ -72,6 +73,7 @@ export function App() {
 			<MovieListByGenre movies={movies} />
 
 			<h1>Filmy wg obsady</h1>
+			<MovieListByCast movies={movies} />
 		</div>
 	);
 }

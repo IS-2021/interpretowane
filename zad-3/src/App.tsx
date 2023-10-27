@@ -2,7 +2,7 @@ import moviesData from "./data/movies-2010s.json";
 import { MovieListByGenre } from "@/components/MovieList/MovieListByGenre";
 import { MovieTable } from "@/components/MovieTable/MovieTable";
 
-function App() {
+export function App() {
 	const movies = moviesData.slice(0, 100);
 
 	return (
@@ -75,5 +75,3 @@ function App() {
 		</div>
 	);
 }
-
-export default App;

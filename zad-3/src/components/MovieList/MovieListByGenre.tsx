@@ -12,11 +12,12 @@ export function MovieListByGenre({ movies }: MovieListByGenreProps) {
 		movie.genres.forEach((genre) => {
 			if (!moviesByGenre.has(genre)) {
 				moviesByGenre.set(genre, [movie]);
-			}
+			} else {
+				const genreMovies = moviesByGenre.get(genre);
 
-			const genreMovies = moviesByGenre.get(genre);
-			if (genreMovies) {
-				moviesByGenre.set(genre, [movie, ...genreMovies]);
+				if (genreMovies) {
+					moviesByGenre.set(genre, [movie, ...genreMovies]);
+				}
 			}
 		});
 	});

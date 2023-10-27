@@ -12,11 +12,12 @@ export function MovieListByCast({ movies }: MovieListByCastProps) {
 		movie.cast.forEach((actor) => {
 			if (!moviesByCast.has(actor)) {
 				moviesByCast.set(actor, [movie]);
-			}
+			} else {
+				const genreMovies = moviesByCast.get(actor);
 
-			const genreMovies = moviesByCast.get(actor);
-			if (genreMovies) {
-				moviesByCast.set(actor, [movie, ...genreMovies]);
+				if (genreMovies) {
+					moviesByCast.set(actor, [movie, ...genreMovies]);
+				}
 			}
 		});
 	});

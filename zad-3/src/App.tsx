@@ -12,15 +12,22 @@ export function App() {
 	const movies = moviesData.slice(0, 100);
 
 	function filterMovies(): Movie[] {
-		let result: Movie[];
+		let result: Movie[] = moviesData;
 
-		result = moviesData.filter(
-			(movie) =>
-				movie.title.toLowerCase().includes((filters.title ?? "").toLowerCase()) &&
+		if (filters.title) {
+			result = result.filter((movie) =>
+				movie.title.toLowerCase().includes((filters.title ?? "").toLowerCase()),
+			);
+		}
+
+		if (filters.cast) {
+			result = result.filter((movie) =>
 				join(movie.cast, " ")
 					.toLowerCase()
 					.includes((filters.cast ?? "").toLowerCase()),
-		);
+			);
+		}
+
 		if (filters.yearFrom && filters.yearTo) {
 			const yearFrom = filters.yearFrom;
 			const yearTo = filters.yearTo;
@@ -39,8 +46,6 @@ export function App() {
 	const filteredMovies = filterMovies();
 
 	function onSearch(data: SearchFormData) {
-		console.log(data);
-
 		setFilters(data);
 	}
 

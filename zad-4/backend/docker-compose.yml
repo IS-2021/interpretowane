@@ -1,0 +1,21 @@
+version: "3.10"
+
+name: "aji-4"
+
+services:
+  postgres:
+    image: postgres:16
+    build:
+      context: ./database
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+
+volumes:
+  db_volume:

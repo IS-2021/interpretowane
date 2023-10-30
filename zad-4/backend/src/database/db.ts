@@ -3,7 +3,7 @@ import { type DB } from "kysely-codegen";
 import pg from "pg";
 import { env } from "@/env";
 
-export const database = new Kysely<DB>({
+export const db = new Kysely<DB>({
 	dialect: new PostgresDialect({
 		pool: new pg.Pool({
 			connectionString: env.DATABASE_URL,

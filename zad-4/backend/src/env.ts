@@ -5,6 +5,7 @@ import { z } from "zod";
 export const env = createEnv({
 	server: {
 		DATABASE_URL: z.string().url(),
+		NODE_ENV: z.union([z.literal("production"), z.literal("development")]),
 	},
 	runtimeEnv: process.env,
 });

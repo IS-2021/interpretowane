@@ -1,8 +1,9 @@
 import Fastify from "fastify";
 import { apiRouter } from "@/api/apiRouter";
+import { getLoggerFromEnv } from "@/logger";
 
 const fastify = Fastify({
-	logger: true,
+	logger: getLoggerFromEnv(),
 });
 
 await fastify.register(apiRouter);

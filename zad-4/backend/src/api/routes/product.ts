@@ -1,14 +1,15 @@
 import type { FastifyInstance } from "fastify";
-import { Type, type Static } from "@sinclair/typebox";
+import { type Static, Type } from "@sinclair/typebox";
+
 import * as crud from "@/model/product";
 import type { UrlParamsWithId } from "@/api/types";
 
 const ProductMutation = Type.Object({
-	name: Type.String(),
-	description: Type.String(),
-	unitprice: Type.Number(),
-	unitweight: Type.Number(),
-	categoryid: Type.String(),
+	name: Type.String({ minLength: 1 }),
+	description: Type.String({ minLength: 1 }),
+	unitprice: Type.Number({ minimum: 1 }),
+	unitweight: Type.Number({ minimum: 1 }),
+	categoryid: Type.String({ format: "uuid" }),
 });
 
 const ProductAddResult = Type.Object({
@@ -57,11 +58,15 @@ export async function productRouter(fastify: FastifyInstance) {
 				},
 			},
 		},
-		async (request) => {
+		async (request, reply) => {
 			const { id } = request.params;
 			const product = request.body;
 
-			return crud.updateProduct({ productid: id, ...product });
+			try {
+				return await crud.updateProduct({ productid: id, ...product });
+			} catch (err) {
+				return reply.code(404).type("text/json").send("Product not found");
+			}
 		},
 	);
 }

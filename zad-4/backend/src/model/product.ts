@@ -19,7 +19,7 @@ export async function addProduct(product: NewProduct) {
 			categoryid: product.categoryid,
 			unitweight: product.unitweight,
 		})
-		.returning("productid")
+		.returningAll()
 		.executeTakeFirst();
 }
 
@@ -33,5 +33,9 @@ export async function updateProduct(product: ProductUpdateWithId) {
 		.set(product)
 		.where("productid", "=", product.productid)
 		.returningAll()
-		.executeTakeFirst();
+		.executeTakeFirstOrThrow();
+}
+
+export async function deleteProduct(productId: string) {
+	return db.deleteFrom("products").where("productid", "=", productId).execute();
 }

@@ -23,11 +23,11 @@ export async function addProduct(product: NewProduct) {
 		.executeTakeFirst();
 }
 
-export async function updateProduct(product: ProductUpdate) {
-	if (!product.productid) {
-		throw new Error("Can't update product with missing productid");
-	}
+type ProductUpdateWithId = ProductUpdate & {
+	productid: NonNullable<ProductUpdate["productid"]>;
+};
 
+export async function updateProduct(product: ProductUpdateWithId) {
 	return db
 		.updateTable("products")
 		.set(product)

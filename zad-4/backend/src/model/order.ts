@@ -17,11 +17,11 @@ export async function getOrdersByUsername(username: string) {
 		.execute();
 }
 
-export async function getOrdersByStatus(status: string) {
+export async function getOrdersByStatusId(statusId: string) {
 	return db
 		.selectFrom("orders")
 		.innerJoin("orderstatuses", "orders.orderstatusid", "orderstatuses.orderstatusid")
-		.where("orderstatuses.status", "=", status)
+		.where("orderstatuses.orderstatusid", "=", statusId)
 		.selectAll()
 		.execute();
 }

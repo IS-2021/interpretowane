@@ -1,4 +1,15 @@
-import { database } from "@/database";
+import Fastify from "fastify";
+import { apiRouter } from "@/api/apiRouter";
 
-const orderStatuses = await database.selectFrom("orderstatuses").select("status").execute();
-console.log(orderStatuses);
+const fastify = Fastify({
+	logger: true,
+});
+
+await fastify.register(apiRouter);
+
+try {
+	await fastify.listen({ port: 3000 });
+} catch (err) {
+	console.error(err);
+	process.exit(1);
+}

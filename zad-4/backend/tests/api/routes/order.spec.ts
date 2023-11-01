@@ -1,61 +1,19 @@
-import { randomUUID } from "crypto";
-import { afterAll, describe, expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import Fastify from "fastify";
-import { validProduct } from "./product.spec";
+import { apiTest } from "../../fixtures";
 import { orderRouter } from "@/api/routes/order";
-import { addUser, deleteUser } from "@/model/user";
-import { getAllOrderStatuses } from "@/model/orderStatus";
-import { addProduct } from "@/model/product";
 
 const app = Fastify();
 await app.register(orderRouter);
 
-const orderStatuses = await getAllOrderStatuses();
-const unapprovedStatusId = orderStatuses.find(({ status }) => status == "NIEZATWIERDZONE")
-	?.orderstatusid;
-if (!unapprovedStatusId) {
-	throw new Error("user is undefined");
-}
-
-const user = await addUser({
-	userid: randomUUID(),
-	username: "testUser",
-	email: "testUser@test.com",
-	telephone: "887-993-120",
-});
-if (!user) {
-	throw new Error("user is undefined");
-}
-
-const product = await addProduct(validProduct);
-if (!product) {
-	throw Error("product is undefined");
-}
-
-const validOrderBase = {
-	orderstatusid: unapprovedStatusId,
-	items: [
-		{
-			productid: product.productid,
-			quantity: 1,
-			unitprice: product.unitprice,
-		},
-	],
-};
-
 describe("Order router tests", () => {
-	afterAll(async () => {
-		await deleteUser(user.userid);
-	});
-
-	test("Fail adding order without providing user", async () => {
+	apiTest("Fail adding order without providing user", async ({ orderData }) => {
 		// Próba dodania zamówienia z pustymi polami dotyczącymi użytkownika
 		const res = await app.inject({
 			method: "POST",
 			url: "/",
 			body: {
-				orderstatusid: unapprovedStatusId,
-				items: validOrderBase.items,
+				...orderData,
 				user: {
 					username: "",
 					email: "",
@@ -68,15 +26,15 @@ describe("Order router tests", () => {
 		expect(res.body.includes("body/user")).toBeTruthy();
 	});
 
-	test("Fail adding order with invalid user details", async () => {
+	apiTest("Fail adding order with invalid user details", async ({ user, orderData }) => {
 		// Próba dodania zamówienia z niewłaściwie wypełnionymi polami dotyczącymi użytkownika (np. numer telefonu zawiera litery)
 		const res = await app.inject({
 			method: "POST",
 			url: "/",
 			body: {
-				...validOrderBase,
+				...orderData,
 				user: {
-					username: "testUser",
+					username: user.username,
 					email: "not_a_valid_email",
 					telephone: user.telephone,
 				},
@@ -91,21 +49,15 @@ describe("Order router tests", () => {
 		// Zmiana statusu po anulowaniu zamówienia
 	});
 
-	test.skip("Fail creating an order with non-existing products", async () => {
+	apiTest.skip("Fail creating an order with non-existing products", async ({ orderData, user }) => {
 		// Próba dodania zamówienia z towarami, których identyfikatorów nie ma w bazie danych
 
 		const res = await app.inject({
 			method: "POST",
 			url: "/",
 			body: {
-				orderstatusid: unapprovedStatusId,
+				...orderData,
 				userid: user.userid,
-				items: [
-					{
-						...validOrderBase.items[0],
-						productid: randomUUID(),
-					},
-				],
 			},
 		});
 
@@ -113,48 +65,51 @@ describe("Order router tests", () => {
 		expect(res.body).toBeTruthy();
 	});
 
-	test("Fail creating an order with negative or zero product quantities", async () => {
-		// Próba dodania zamówienia z ujemnymi, zerowymi lub zawierającymi liczby ilościami towarów
+	apiTest(
+		"Fail creating an order with negative or zero product quantities",
+		async ({ orderData, user }) => {
+			// Próba dodania zamówienia z ujemnymi, zerowymi lub zawierającymi liczby ilościami towarów
 
-		{
-			const res = await app.inject({
-				method: "POST",
-				url: "/",
-				body: {
-					orderstatusid: unapprovedStatusId,
-					userid: user.userid,
-					items: [
-						{
-							...validOrderBase.items[0],
-							quantity: -1,
-						},
-					],
-				},
-			});
+			{
+				const res = await app.inject({
+					method: "POST",
+					url: "/",
+					body: {
+						...orderData,
+						userid: user.userid,
+						items: [
+							{
+								...orderData.items[0],
+								quantity: -1,
+							},
+						],
+					},
+				});
 
-			expect(res.statusCode).toBe(400);
-			expect(res.body).toBeTruthy();
-		}
-		{
-			const res = await app.inject({
-				method: "POST",
-				url: "/",
-				body: {
-					orderstatusid: unapprovedStatusId,
-					userid: user.userid,
-					items: [
-						{
-							...validOrderBase.items[0],
-							quantity: 0,
-						},
-					],
-				},
-			});
+				expect(res.statusCode).toBe(400);
+				expect(res.body).toBeTruthy();
+			}
+			{
+				const res = await app.inject({
+					method: "POST",
+					url: "/",
+					body: {
+						...orderData,
+						userid: user.userid,
+						items: [
+							{
+								...orderData.items[0],
+								quantity: 0,
+							},
+						],
+					},
+				});
 
-			expect(res.statusCode).toBe(400);
-			expect(res.body).toBeTruthy();
-		}
-	});
+				expect(res.statusCode).toBe(400);
+				expect(res.body).toBeTruthy();
+			}
+		},
+	);
 
 	test.skip("Fail order status regression", async () => {
 		// Zmiana statusu "wstecz", np. ze "ZREALIZOWANE" na "NIEZATWIERDZONE"

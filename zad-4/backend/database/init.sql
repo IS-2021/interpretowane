@@ -50,4 +50,11 @@ CREATE TABLE OrderItems (
     CONSTRAINT productIdFK FOREIGN KEY (productId) REFERENCES Products (productId)
 );
 
-INSERT INTO OrderStatuses (status) VALUES ('NIEZATWIERDZONE'), ('ZATWIERDZONE'), ('ANULOWANE'), ('ZREALIZOWANE');
+INSERT INTO OrderStatuses ('orderStatusId', 'status') VALUES
+('f4e28cb9-2c6b-4f6b-b48c-beeeb8f5a216', 'NIEZATWIERDZONE'),
+('abada23e-2ffd-4a6c-893d-c8585b3cc78a', 'ZATWIERDZONE'),
+('4fc1ceec-6548-4257-8064-bcea84f8f218', 'ANULOWANE'),
+('83e2ddaa-b6eb-410d-a7fe-b2418e78f367', 'ZREALIZOWANE');
+
+INSERT INTO Categories (name) VALUES ('Owoce');
+INSERT INTO Products (name, description, unitPrice, unitWeight, categoryId) VALUES ('Jabłka', 'Świeże i smaczne', 500, 1000, (SELECT categoryId FROM Categories WHERE name = 'Owoce'));

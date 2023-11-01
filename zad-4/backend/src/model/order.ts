@@ -1,4 +1,5 @@
 import { db } from "@/database/db";
+import type { NewOrder } from "@/database/types";
 
 export async function getAllOrders() {
 	return db.selectFrom("orders").selectAll().execute();
@@ -15,6 +16,10 @@ export async function getOrdersByUsername(username: string) {
 		.where("username", "=", username)
 		.selectAll()
 		.execute();
+}
+
+export async function addOrder(order: NewOrder) {
+	return db.insertInto("orders").values(order).returningAll().executeTakeFirst();
 }
 
 export async function getOrdersByStatusId(statusId: string) {

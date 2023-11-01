@@ -7,7 +7,7 @@ import { addProduct, deleteProduct } from "@/model/product";
 const app = Fastify();
 await app.register(productRouter);
 
-const validProduct = {
+export const validProduct = {
 	name: "Test product",
 	description: "Test description",
 	unitprice: 100,

@@ -3,16 +3,37 @@ import { type Static, Type } from "@sinclair/typebox";
 import * as crud from "@/model/order";
 import type { UrlParamsWithId } from "@/api/types";
 
-const OrderCreate = Type.Object({
-	approvaldate: Type.Date(),
+const OrderCreateBase = Type.Object({
+	approvaldate: Type.Optional(Type.String()),
 	orderstatusid: Type.String(),
-	userid: Type.String(),
-	items: Type.Object({
-		productid: Type.String(),
-		quantity: Type.Integer(),
-		unitprice: Type.Integer(),
-	}),
+	items: Type.Array(
+		Type.Object({
+			productid: Type.String({ format: "uuid" }),
+			quantity: Type.Integer({ minimum: 1 }),
+			unitprice: Type.Integer({ minimum: 0 }),
+		}),
+	),
 });
+
+const OrderCreateWithNewUser = Type.Composite([
+	OrderCreateBase,
+	Type.Object({
+		user: Type.Object({
+			username: Type.String({ minLength: 1 }),
+			email: Type.String({ minLength: 1, format: "email" }),
+			telephone: Type.String({ minLength: 9 }),
+		}),
+	}),
+]);
+
+const OrderCreateWithExistingUser = Type.Composite([
+	OrderCreateBase,
+	Type.Object({
+		userid: Type.String(),
+	}),
+]);
+
+const OrderCreate = Type.Union([OrderCreateWithNewUser, OrderCreateWithExistingUser]);
 
 type OrderCreateType = Static<typeof OrderCreate>;
 
@@ -35,7 +56,7 @@ export async function orderRouter(fastify: FastifyInstance) {
 			},
 		},
 		async (request) => {
-			const order = request.body;
+			const _order = request.body;
 
 			throw Error("Not implemented");
 		},

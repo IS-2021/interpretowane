@@ -1,5 +1,9 @@
 import type { Insertable, Updateable } from "kysely";
-import type { Products } from "kysely-codegen";
+import type { Orders, Products, Users } from "kysely-codegen";
 
 export type NewProduct = Insertable<Products>;
 export type ProductUpdate = Updateable<Products>;
+
+export type NewUser = Insertable<Users>;
+
+export type NewOrder = Insertable<Orders>;

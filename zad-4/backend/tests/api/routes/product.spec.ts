@@ -1,29 +1,21 @@
 import { randomUUID } from "crypto";
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 import Fastify from "fastify";
+import { apiTest } from "../../fixtures";
 import { productRouter } from "@/api/routes/product";
-import { addProduct, deleteProduct } from "@/model/product";
 
 const app = Fastify();
 await app.register(productRouter);
 
-export const validProduct = {
-	name: "Test product",
-	description: "Test description",
-	unitprice: 100,
-	unitweight: 1000,
-	categoryid: "609c46fa-1607-48e5-83c5-e5d6b6c11a8f",
-};
-
 describe("Product router tests", () => {
-	test("Fail adding product with invalid data", async () => {
+	apiTest("Fail adding product with invalid data", async ({ productData }) => {
 		{
 			const res = await app.inject({
 				method: "POST",
 				url: "/",
 				body: {
-					...validProduct,
-					unitprice: -validProduct.unitprice,
+					...productData,
+					unitprice: -productData.unitprice,
 				},
 			});
 
@@ -35,8 +27,8 @@ describe("Product router tests", () => {
 				method: "POST",
 				url: "/",
 				body: {
-					...validProduct,
-					unitweight: -validProduct.unitweight,
+					...productData,
+					unitweight: -productData.unitweight,
 				},
 			});
 
@@ -49,7 +41,7 @@ describe("Product router tests", () => {
 				method: "POST",
 				url: "/",
 				body: {
-					...validProduct,
+					...productData,
 					unitprice: 0,
 				},
 			});
@@ -62,7 +54,7 @@ describe("Product router tests", () => {
 				method: "POST",
 				url: "/",
 				body: {
-					...validProduct,
+					...productData,
 					unitweight: 0,
 				},
 			});
@@ -76,7 +68,7 @@ describe("Product router tests", () => {
 				method: "POST",
 				url: "/",
 				body: {
-					...validProduct,
+					...productData,
 					name: "",
 				},
 			});
@@ -89,7 +81,7 @@ describe("Product router tests", () => {
 				method: "POST",
 				url: "/",
 				body: {
-					...validProduct,
+					...productData,
 					description: "",
 				},
 			});
@@ -99,34 +91,26 @@ describe("Product router tests", () => {
 		}
 	});
 
-	test("Fail updating product with invalid data", async () => {
-		const product = await addProduct(validProduct);
-
-		if (!product) {
-			throw Error("crud: addProduct didn't return added product");
-		}
-
+	apiTest("Fail updating product with invalid data", async ({ product }) => {
 		const res = await app.inject({
 			method: "PUT",
 			url: `/${product.productid}`,
 			body: {
-				...validProduct,
+				...product,
 				name: "",
 			},
 		});
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body.includes("body/name")).toBeTruthy();
-
-		await deleteProduct(product.productid);
 	});
 
-	test("Fail updating non-existent product", async () => {
+	apiTest("Fail updating non-existent product", async ({ productData }) => {
 		const res = await app.inject({
 			method: "PUT",
 			url: `/${randomUUID()}`,
 			body: {
-				...validProduct,
+				...productData,
 			},
 		});
 

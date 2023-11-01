@@ -12,6 +12,7 @@ export function getLoggerFromEnv() {
 			},
 		},
 		production: true,
+		test: false,
 	};
 
 	return envToLogger[env.NODE_ENV];

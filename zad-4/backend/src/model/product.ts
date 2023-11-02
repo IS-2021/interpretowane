@@ -17,10 +17,10 @@ export async function checkAllProductsExist(productIds: string[]) {
 	const products = await db
 		.selectFrom("products")
 		.where("productid", "in", productIds)
-		.select(({ fn }) => [fn.count<number>("productid").as("count")])
+		.select(({ fn }) => [fn.count("productid").as("count")])
 		.executeTakeFirstOrThrow();
 
-	return products.count === productIds.length;
+	return Number(products.count) === productIds.length;
 }
 
 export async function addProduct(product: NewProduct) {

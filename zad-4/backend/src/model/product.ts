@@ -9,6 +9,20 @@ export async function getProductById(productId: string) {
 	return db.selectFrom("products").where("productid", "=", productId).selectAll().execute();
 }
 
+export async function getProductsByIds(productIds: string[]) {
+	return db.selectFrom("products").where("productid", "in", productIds).selectAll().execute();
+}
+
+export async function checkAllProductsExist(productIds: string[]) {
+	const products = await db
+		.selectFrom("products")
+		.where("productid", "in", productIds)
+		.select(({ fn }) => [fn.count<number>("productid").as("count")])
+		.executeTakeFirstOrThrow();
+
+	return products.count === productIds.length;
+}
+
 export async function addProduct(product: NewProduct) {
 	return db
 		.insertInto("products")

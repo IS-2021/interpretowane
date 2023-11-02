@@ -2,6 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { type Static, Type } from "@sinclair/typebox";
 import * as crud from "@/model/order";
 import type { UrlParamsWithId } from "@/api/types";
+import { checkAllProductsExist } from "@/model/product";
 
 const OrderCreateBase = Type.Object({
 	approvaldate: Type.Optional(Type.String()),
@@ -55,10 +56,20 @@ export async function orderRouter(fastify: FastifyInstance) {
 				body: OrderCreate,
 			},
 		},
-		async (request) => {
-			const _order = request.body;
+		async (request, response) => {
+			const order = request.body;
 
-			throw Error("Not implemented");
+			const productIds = order.items.map((item) => item.productid);
+			const doesAllProductsExist = await checkAllProductsExist(productIds);
+			if (!doesAllProductsExist) {
+				await response
+					.code(422)
+					.type("application/json")
+					.send({ error: "Not all order items exist" });
+			}
+
+			// TODO: Implement
+			await response.code(500).type("application/json").send({ error: "Not implemented" });
 		},
 	);
 }

@@ -49,7 +49,7 @@ describe("Order router tests", () => {
 		// Zmiana statusu po anulowaniu zamówienia
 	});
 
-	apiTest.skip("Fail creating an order with non-existing products", async ({ orderData, user }) => {
+	apiTest("Fail creating an order with non-existing products", async ({ orderData, user }) => {
 		// Próba dodania zamówienia z towarami, których identyfikatorów nie ma w bazie danych
 
 		const res = await app.inject({
@@ -61,7 +61,7 @@ describe("Order router tests", () => {
 			},
 		});
 
-		expect(res.statusCode).toBe(404);
+		expect(res.statusCode).toBe(422);
 		expect(res.body).toBeTruthy();
 	});
 

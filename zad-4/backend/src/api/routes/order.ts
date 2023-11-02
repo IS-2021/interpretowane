@@ -3,10 +3,11 @@ import { type Static, Type } from "@sinclair/typebox";
 import * as crud from "@/model/order";
 import type { UrlParamsWithId } from "@/api/types";
 import { checkAllProductsExist } from "@/model/product";
+import { addUser } from "@/model/user";
+import { OrderStatus } from "@/model/orderStatus";
 
 const OrderCreateBase = Type.Object({
 	approvaldate: Type.Optional(Type.String()),
-	orderstatusid: Type.String(),
 	items: Type.Array(
 		Type.Object({
 			productid: Type.String({ format: "uuid" }),
@@ -37,6 +38,8 @@ const OrderCreateWithExistingUser = Type.Composite([
 const OrderCreate = Type.Union([OrderCreateWithNewUser, OrderCreateWithExistingUser]);
 
 type OrderCreateType = Static<typeof OrderCreate>;
+type OrderCreateWithNewUserType = Static<typeof OrderCreateWithNewUser>;
+type OrderCreateWithExistingUserType = Static<typeof OrderCreateWithExistingUser>;
 
 export async function orderRouter(fastify: FastifyInstance) {
 	fastify.get("/", async () => {
@@ -57,19 +60,49 @@ export async function orderRouter(fastify: FastifyInstance) {
 			},
 		},
 		async (request, response) => {
-			const order = request.body;
+			const orderData = request.body;
 
-			const productIds = order.items.map((item) => item.productid);
+			const productIds = orderData.items.map((item) => item.productid);
 			const doesAllProductsExist = await checkAllProductsExist(productIds);
 			if (!doesAllProductsExist) {
-				await response
+				return response
 					.code(422)
 					.type("application/json")
 					.send({ error: "Not all order items exist" });
 			}
 
-			// TODO: Implement
-			await response.code(500).type("application/json").send({ error: "Not implemented" });
+			// Create or get user
+			let userId: string;
+			if ((orderData as OrderCreateWithNewUserType).user) {
+				const _order = orderData as OrderCreateWithNewUserType;
+				const user = await addUser(_order.user);
+				userId = user.userid;
+			} else if ((orderData as OrderCreateWithExistingUserType).userid) {
+				const _order = orderData as OrderCreateWithExistingUserType;
+				userId = _order.userid;
+			} else {
+				throw Error("userid not initialized properly");
+			}
+
+			// Create an order and order's items
+			const order = await crud.addOrder({
+				userid: userId,
+				orderstatusid: OrderStatus.UNAPPROVED,
+			});
+
+			const inserts = orderData.items.map((item) => {
+				return crud.addOrderItem({
+					orderid: order.orderid,
+					productid: item.productid,
+					quantity: item.quantity,
+					unitprice: item.unitprice,
+				});
+			});
+
+			const items = await Promise.all(inserts);
+
+			const res = { ...order, items };
+			return response.code(200).type("application/json").send(res);
 		},
 	);
 }

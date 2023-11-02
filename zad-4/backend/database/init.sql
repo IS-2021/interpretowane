@@ -35,7 +35,7 @@ CREATE TABLE Orders (
     userId UUID NOT NULL,
 
     CONSTRAINT orderStatusIdFK FOREIGN KEY (orderStatusId) REFERENCES OrderStatuses (orderStatusId),
-    CONSTRAINT userIdFK FOREIGN KEY (userId) REFERENCES Users (userId)
+    CONSTRAINT userIdFK FOREIGN KEY (userId) REFERENCES Users (userId) ON DELETE CASCADE
 );
 
 

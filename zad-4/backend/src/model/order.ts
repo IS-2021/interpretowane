@@ -1,5 +1,5 @@
 import { db } from "@/database/db";
-import type { NewOrder } from "@/database/types";
+import type { NewOrder, NewOrderItem } from "@/database/types";
 
 export async function getAllOrders() {
 	return db.selectFrom("orders").selectAll().execute();
@@ -19,7 +19,15 @@ export async function getOrdersByUsername(username: string) {
 }
 
 export async function addOrder(order: NewOrder) {
-	return db.insertInto("orders").values(order).returningAll().executeTakeFirst();
+	return db.insertInto("orders").values(order).returningAll().executeTakeFirstOrThrow();
+}
+
+export async function addOrderItem(item: NewOrderItem) {
+	return db
+		.insertInto("orderitems")
+		.values(item)
+		.returning(["orderitemid", "productid", "quantity", "unitprice"])
+		.executeTakeFirstOrThrow();
 }
 
 export async function getOrdersByStatusId(statusId: string) {

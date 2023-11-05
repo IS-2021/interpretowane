@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { describe, expect, test } from "vitest";
 import Fastify from "fastify";
 import { apiTest } from "../../fixtures";
@@ -56,7 +57,12 @@ describe("Order router tests", () => {
 			method: "POST",
 			url: "/",
 			body: {
-				...orderData,
+				items: [
+					{
+						...orderData.items[0],
+						productid: randomUUID(),
+					},
+				],
 				userid: user.userid,
 			},
 		});

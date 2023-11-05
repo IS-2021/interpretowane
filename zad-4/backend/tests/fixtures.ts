@@ -1,22 +1,25 @@
 import { test } from "vitest";
-import { productData, type ProductData, product } from "./fixtures/product";
+import { productData, type ProductData } from "./fixtures/product";
 import { type UserData, userData, user } from "./fixtures/user";
 import type { OrderData } from "./fixtures/order";
-import type { Product, User } from "@/database/types";
+import { category, type CategoryData, categoryData } from "./fixtures/category";
+import type { Category, Product, User } from "@/database/types";
+import { addProduct, deleteProduct } from "@/model/product";
 
 type ApiTestFixtures = {
 	userData: UserData;
-	user: User;
+	categoryData: CategoryData;
 	productData: ProductData;
-	product: Product;
 	orderData: OrderData;
+	user: User;
+	category: Category;
+	product: Product;
 };
 
 export const apiTest = test.extend<ApiTestFixtures>({
 	userData,
-	user,
 	productData,
-	product,
+	categoryData,
 	orderData: async ({ product: { productid, unitprice } }, use) => {
 		const orderData: OrderData = {
 			items: [
@@ -29,5 +32,21 @@ export const apiTest = test.extend<ApiTestFixtures>({
 		};
 
 		await use(orderData);
+	},
+	user,
+	category,
+	product: async ({ category }, use) => {
+		const product = await addProduct({
+			...productData,
+			categoryid: category.categoryid,
+		});
+
+		if (!product) {
+			throw Error("Product fixture not initialized properly: product is undefined");
+		}
+
+		await use(product);
+
+		await deleteProduct(product.productid);
 	},
 });

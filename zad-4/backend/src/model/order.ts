@@ -6,7 +6,11 @@ export async function getAllOrders() {
 }
 
 export async function getOrderById(orderId: string) {
-	return db.selectFrom("orders").where("orderid", "=", orderId).selectAll().execute();
+	return db
+		.selectFrom("orders")
+		.where("orderid", "=", orderId)
+		.selectAll()
+		.executeTakeFirstOrThrow();
 }
 
 export async function getOrdersByUsername(username: string) {
@@ -56,4 +60,8 @@ export async function updateOrderStatus(orderId: string, orderStatusName: string
 		.where("orderid", "=", orderId)
 		.returningAll()
 		.executeTakeFirst();
+}
+
+export async function deleteOrder(orderId: string) {
+	return db.deleteFrom("orders").where("orderid", "=", orderId).execute();
 }

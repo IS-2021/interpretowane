@@ -3,6 +3,8 @@ import { describe, expect, test } from "vitest";
 import Fastify from "fastify";
 import { apiTest } from "../../fixtures";
 import { orderRouter } from "@/api/routes/order";
+import { addOrder, deleteOrder } from "@/model/order";
+import { OrderStatus } from "@/model/orderStatus";
 
 const app = Fastify();
 await app.register(orderRouter);
@@ -44,10 +46,6 @@ describe("Order router tests", () => {
 
 		expect(res.statusCode).toBe(400);
 		expect(res.body.includes("email")).toBeTruthy();
-	});
-
-	test.skip("Fail updating order status for cancelled order", async () => {
-		// Zmiana statusu po anulowaniu zamówienia
 	});
 
 	apiTest("Fail creating an order with non-existing products", async ({ orderData, user }) => {
@@ -116,6 +114,36 @@ describe("Order router tests", () => {
 			}
 		},
 	);
+
+	apiTest("Fail updating order status for cancelled order", async ({ user }) => {
+		// Zmiana statusu po anulowaniu zamówienia
+
+		const cancelledOrder = await addOrder({
+			userid: user.userid,
+			orderstatusid: OrderStatus.CANCELLED,
+		});
+
+		const res = await app.inject({
+			method: "PATCH",
+			url: `/${cancelledOrder.orderid}`,
+			headers: {
+				"content-type": "application/json",
+			},
+			body: JSON.stringify([
+				{
+					op: "replace",
+					path: `/orderStatusId`,
+					value: OrderStatus.APPROVED,
+				},
+			]),
+		});
+
+		// TODO: Remove console log
+		console.log(res.body);
+		expect(res.statusCode).toBe(422);
+
+		await deleteOrder(cancelledOrder.orderid);
+	});
 
 	test.skip("Fail order status regression", async () => {
 		// Zmiana statusu "wstecz", np. ze "ZREALIZOWANE" na "NIEZATWIERDZONE"

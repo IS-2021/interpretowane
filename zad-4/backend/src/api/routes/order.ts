@@ -1,10 +1,12 @@
 import type { FastifyInstance } from "fastify";
 import { type Static, Type } from "@sinclair/typebox";
+import jsonpatch from "fast-json-patch";
 import * as crud from "@/model/order";
 import type { UrlParamsWithId } from "@/api/types";
 import { checkAllProductsExist } from "@/model/product";
 import { addUser } from "@/model/user";
 import { OrderStatus } from "@/model/orderStatus";
+import { getOrderById } from "@/model/order";
 
 const OrderCreateBase = Type.Object({
 	approvaldate: Type.Optional(Type.String()),
@@ -105,4 +107,31 @@ export async function orderRouter(fastify: FastifyInstance) {
 			return response.code(200).type("application/json").send(res);
 		},
 	);
+
+	// TODO: Fix typing
+	fastify.patch<{ Params: UrlParamsWithId }>("/:id", async (request, response) => {
+		const { id } = request.params;
+		const patch = request.body;
+
+		const order = await getOrderById(id);
+
+		let updatedOrder: Awaited<ReturnType<typeof getOrderById>>;
+		try {
+			updatedOrder = jsonpatch.applyPatch(order, patch, true, false).newDocument;
+		} catch (err) {
+			return response.code(422).type("application/json").send({ error: err });
+		}
+
+		const isOrderCancelled = (order.orderstatusid as OrderStatus) == OrderStatus.CANCELLED;
+		const hasOrderStatusChanged = updatedOrder.orderstatusid != order.orderstatusid;
+		console.log(isOrderCancelled, hasOrderStatusChanged);
+		if (isOrderCancelled && hasOrderStatusChanged) {
+			return response
+				.code(422)
+				.type("application/json")
+				.send({ error: "Cannot update status of a cancelled order" });
+		}
+
+		// TODO: Save modified document
+	});
 }

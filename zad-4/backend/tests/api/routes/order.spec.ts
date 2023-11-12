@@ -138,9 +138,9 @@ describe("Order router tests", () => {
 			]),
 		});
 
-		// TODO: Remove console log
-		console.log(res.body);
 		expect(res.statusCode).toBe(422);
+		expect(res.body).toBeTruthy();
+		expect(res.body.includes("error")).toBeTruthy();
 
 		await deleteOrder(cancelledOrder.orderid);
 	});

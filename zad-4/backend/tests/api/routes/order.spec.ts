@@ -126,16 +126,13 @@ describe("Order router tests", () => {
 		const res = await app.inject({
 			method: "PATCH",
 			url: `/${cancelledOrder.orderid}`,
-			headers: {
-				"content-type": "application/json",
-			},
-			body: JSON.stringify([
+			body: [
 				{
 					op: "replace",
 					path: `/orderStatusId`,
 					value: OrderStatus.APPROVED,
 				},
-			]),
+			],
 		});
 
 		expect(res.statusCode).toBe(422);

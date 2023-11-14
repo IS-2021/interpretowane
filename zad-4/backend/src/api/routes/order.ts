@@ -39,6 +39,7 @@ const OrderCreateWithExistingUser = Type.Composite([
 
 const OrderCreate = Type.Union([OrderCreateWithNewUser, OrderCreateWithExistingUser]);
 
+type OrderType = Awaited<ReturnType<typeof getOrderById>>;
 type OrderCreateType = Static<typeof OrderCreate>;
 type OrderCreateWithNewUserType = Static<typeof OrderCreateWithNewUser>;
 type OrderCreateWithExistingUserType = Static<typeof OrderCreateWithExistingUser>;
@@ -113,9 +114,14 @@ export async function orderRouter(fastify: FastifyInstance) {
 		const { id } = request.params;
 		const patch = request.body;
 
-		const order = await getOrderById(id);
+		let order: OrderType;
+		try {
+			order = await getOrderById(id);
+		} catch (err) {
+			return response.code(404).type("application/json").send({ error: "Order not found." });
+		}
 
-		let updatedOrder: Awaited<ReturnType<typeof getOrderById>>;
+		let updatedOrder: OrderType;
 		try {
 			updatedOrder = jsonpatch.applyPatch(order, patch, true, false).newDocument;
 		} catch (err) {

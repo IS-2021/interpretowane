@@ -146,7 +146,22 @@ describe("Order router tests", () => {
 		// Zmiana statusu "wstecz", np. ze "ZREALIZOWANE" na "NIEZATWIERDZONE"
 	});
 
-	test.skip("Fail updating status for non-existing order", async () => {
+	test("Fail updating status for non-existing order", async () => {
 		// Próba aktualizacji stanu zamówienia o nieistniejącym identyfikatorze
+
+		const res = await app.inject({
+			method: "PATCH",
+			url: `/${randomUUID()}`,
+			body: [
+				{
+					op: "replace",
+					path: `/orderstatusid`,
+					value: OrderStatus.APPROVED,
+				},
+			],
+		});
+
+		expect(res.statusCode).toBe(404);
+		expect(res.body.includes("not found")).toBeTruthy();
 	});
 });

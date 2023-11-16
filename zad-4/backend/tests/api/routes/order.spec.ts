@@ -129,7 +129,7 @@ describe("Order router tests", () => {
 			body: [
 				{
 					op: "replace",
-					path: `/orderStatusId`,
+					path: `/orderstatusid`,
 					value: OrderStatus.APPROVED,
 				},
 			],
@@ -142,8 +142,46 @@ describe("Order router tests", () => {
 		await deleteOrder(cancelledOrder.orderid);
 	});
 
-	test.skip("Fail order status regression", async () => {
+	apiTest("Fail order status regression", async ({ user }) => {
 		// Zmiana statusu "wstecz", np. ze "ZREALIZOWANE" na "NIEZATWIERDZONE"
+
+		const illegalTransitions = [
+			[OrderStatus.COMPLETED, OrderStatus.APPROVED],
+			[OrderStatus.COMPLETED, OrderStatus.UNAPPROVED],
+			[OrderStatus.COMPLETED, OrderStatus.CANCELLED],
+			[OrderStatus.APPROVED, OrderStatus.CANCELLED],
+			[OrderStatus.APPROVED, OrderStatus.UNAPPROVED],
+			[OrderStatus.CANCELLED, OrderStatus.UNAPPROVED],
+			[OrderStatus.CANCELLED, OrderStatus.APPROVED],
+			[OrderStatus.CANCELLED, OrderStatus.COMPLETED],
+		];
+
+		for (const illegalTransition of illegalTransitions) {
+			const [currStatus, illegalStatus] = illegalTransition;
+			if (!currStatus || !illegalStatus) throw Error("Undefined OrderStatus");
+
+			const order = await addOrder({
+				userid: user.userid,
+				orderstatusid: currStatus,
+			});
+
+			const res = await app.inject({
+				method: "PATCH",
+				url: `/${order.orderid}`,
+				body: [
+					{
+						op: "replace",
+						path: `/orderstatusid`,
+						value: illegalStatus,
+					},
+				],
+			});
+
+			expect(res.statusCode).toBe(422);
+			expect(res.body).toBeTruthy();
+
+			await deleteOrder(order.orderid);
+		}
 	});
 
 	test("Fail updating status for non-existing order", async () => {

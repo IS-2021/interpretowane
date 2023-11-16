@@ -2,11 +2,11 @@ import type { FastifyInstance } from "fastify";
 import { type Static, Type } from "@sinclair/typebox";
 import jsonpatch from "fast-json-patch";
 import * as crud from "@/model/order";
+import { getOrderById } from "@/model/order";
 import type { UrlParamsWithId } from "@/api/types";
 import { checkAllProductsExist } from "@/model/product";
 import { addUser } from "@/model/user";
-import { OrderStatus } from "@/model/orderStatus";
-import { getOrderById } from "@/model/order";
+import { getPossibleStatusTransitions, OrderStatus } from "@/model/orderStatus";
 
 const OrderCreateBase = Type.Object({
 	approvaldate: Type.Optional(Type.String()),
@@ -128,14 +128,16 @@ export async function orderRouter(fastify: FastifyInstance) {
 			return response.code(422).type("application/json").send({ error: err });
 		}
 
-		const isOrderCancelled = (order.orderstatusid as OrderStatus) == OrderStatus.CANCELLED;
-		const hasOrderStatusChanged = updatedOrder.orderstatusid != order.orderstatusid;
-		console.log(isOrderCancelled, hasOrderStatusChanged);
-		if (isOrderCancelled && hasOrderStatusChanged) {
+		const orderStatus = order.orderstatusid as OrderStatus;
+		const updatedOrderStatus = updatedOrder.orderstatusid as OrderStatus;
+
+		const isValidStatusTransition =
+			getPossibleStatusTransitions(orderStatus).includes(updatedOrderStatus);
+		if (!isValidStatusTransition) {
 			return response
 				.code(422)
 				.type("application/json")
-				.send({ error: "Cannot update status of a cancelled order" });
+				.send({ error: "Cannot update order status backwards" });
 		}
 
 		// TODO: Save modified document

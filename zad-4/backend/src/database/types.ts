@@ -10,6 +10,7 @@ export type NewUser = Insertable<Users>;
 
 export type Order = Selectable<Orders>;
 export type NewOrder = Insertable<Orders>;
+export type OrderUpdate = Updateable<Orders>;
 
 export type NewOrderItem = Insertable<Orderitems>;
 

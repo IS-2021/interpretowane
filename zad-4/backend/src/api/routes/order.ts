@@ -109,7 +109,6 @@ export async function orderRouter(fastify: FastifyInstance) {
 		},
 	);
 
-	// TODO: Fix typing
 	fastify.patch<{ Params: UrlParamsWithId }>("/:id", async (request, response) => {
 		const { id } = request.params;
 		const patch = request.body;
@@ -123,6 +122,7 @@ export async function orderRouter(fastify: FastifyInstance) {
 
 		let updatedOrder: OrderType;
 		try {
+			// TODO: Fix typing
 			updatedOrder = jsonpatch.applyPatch(order, patch, true, false).newDocument;
 		} catch (err) {
 			return response.code(422).type("application/json").send({ error: err });
@@ -134,12 +134,12 @@ export async function orderRouter(fastify: FastifyInstance) {
 		const isValidStatusTransition =
 			getPossibleStatusTransitions(orderStatus).includes(updatedOrderStatus);
 		if (!isValidStatusTransition) {
-			return response
-				.code(422)
-				.type("application/json")
-				.send({ error: "Cannot update order status backwards" });
+			return response.code(422).type("application/json").send({
+				error: "Illegal order status transition - status can be advanced only linearly forward",
+			});
 		}
 
-		// TODO: Save modified document
+		const updatedOrderData = await crud.updateOrder(id, updatedOrder);
+		return response.code(200).type("application/json").send(updatedOrderData);
 	});
 }

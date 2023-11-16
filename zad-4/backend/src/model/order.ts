@@ -1,5 +1,5 @@
 import { db } from "@/database/db";
-import type { NewOrder, NewOrderItem } from "@/database/types";
+import type { NewOrder, NewOrderItem, OrderUpdate } from "@/database/types";
 
 export async function getAllOrders() {
 	return db.selectFrom("orders").selectAll().execute();
@@ -43,20 +43,19 @@ export async function getOrdersByStatusId(statusId: string) {
 		.execute();
 }
 
-export async function updateOrderStatus(orderId: string, orderStatusName: string) {
-	const orderStatus = await db
-		.selectFrom("orderstatuses")
-		.where("status", "=", orderStatusName)
-		.select("orderstatusid")
-		.executeTakeFirst();
-
-	if (!orderStatus) {
-		throw new Error(`Couldn't find OrderStatus with name ${orderStatusName}`);
-	}
-
+export async function updateOrderStatus(orderId: string, orderStatusId: string) {
 	return db
 		.updateTable("orders")
-		.set({ orderstatusid: orderStatus.orderstatusid })
+		.set({ orderstatusid: orderStatusId })
+		.where("orderid", "=", orderId)
+		.returningAll()
+		.executeTakeFirst();
+}
+
+export async function updateOrder(orderId: string, orderData: OrderUpdate) {
+	return db
+		.updateTable("orders")
+		.set(orderData)
 		.where("orderid", "=", orderId)
 		.returningAll()
 		.executeTakeFirst();

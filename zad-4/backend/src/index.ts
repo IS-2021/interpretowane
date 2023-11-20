@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
 import { apiRouter } from "@/api/apiRouter";
 import { getLoggerFromEnv } from "@/logger";
 
@@ -6,6 +7,9 @@ const fastify = Fastify({
 	logger: getLoggerFromEnv(),
 });
 
+await fastify.register(cors, {
+	origin: true,
+});
 await fastify.register(apiRouter);
 
 try {

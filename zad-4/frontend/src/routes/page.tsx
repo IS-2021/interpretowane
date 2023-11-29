@@ -119,8 +119,11 @@ export function HomePage() {
 							<SelectGroup>
 								<SelectLabel>Wybierz kategorię</SelectLabel>
 								<SelectItem value="all">Wszystko</SelectItem>
-								<SelectItem value="owoce">Owoce</SelectItem>
-								<SelectItem value="warzywa">Warzywa</SelectItem>
+								{Object.keys(categories).map((category) => (
+									<SelectItem key={`category-${category}`} value={category} className="capitalize">
+										{category}
+									</SelectItem>
+								))}
 							</SelectGroup>
 						</SelectContent>
 					</Select>

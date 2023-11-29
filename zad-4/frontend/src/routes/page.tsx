@@ -46,7 +46,7 @@ export function HomePage() {
 		return isNameMatch && isCategoryMatch;
 	});
 
-	function addToCartHandle(product: Product) {
+	function handleAddToCart(product: Product) {
 		dispatch(
 			addCartItem({
 				productid: product.productid,
@@ -127,7 +127,7 @@ export function HomePage() {
 								<TableCell>{product.description}</TableCell>
 								<TableCell>{formatPrice(parseInt(product.unitprice))}</TableCell>
 								<TableCell>
-									<Button onClick={() => addToCartHandle(product)}>
+									<Button onClick={() => handleAddToCart(product)}>
 										Add
 										<ShoppingCartIcon className="ml-2" size={16} />
 									</Button>

@@ -19,19 +19,8 @@ export const cartSlice = createSlice({
 				state[payload.productid] = { ...payload, quantity: 1 };
 			}
 		},
-		removeCartItem: (state, { payload }: PayloadAction<CartItemPayload>) => {
+		removeCartItem: (state, { payload }: PayloadAction<Pick<CartItemPayload, "productid">>) => {
 			delete state[payload.productid];
-		},
-		setCartItemQuantity: (state, { payload }: PayloadAction<CartItemPayload>) => {
-			if (payload.quantity <= 0) {
-				delete state[payload.productid];
-				return;
-			}
-
-			const cartItem = state[payload.productid];
-			if (cartItem) {
-				cartItem.quantity = payload.quantity;
-			}
 		},
 		incrementCartItemQuantity: (
 			state,
@@ -42,7 +31,10 @@ export const cartSlice = createSlice({
 				cartItem.quantity++;
 			}
 		},
-		decrementCartItemQuantity: (state, { payload }: PayloadAction<CartItemPayload>) => {
+		decrementCartItemQuantity: (
+			state,
+			{ payload }: PayloadAction<Pick<CartItemPayload, "productid">>,
+		) => {
 			const cartItem = state[payload.productid];
 			if (!cartItem) {
 				return;

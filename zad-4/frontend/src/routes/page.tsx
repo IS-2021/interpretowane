@@ -17,16 +17,8 @@ import { formatPrice } from "@/lib/utils";
 import { type Product } from "@/api/types";
 import { Label } from "@/components/UI/Label";
 import { Input } from "@/components/UI/Input";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/UI/Select";
 import { useGetCategories } from "@/api/categories";
+import { CategorySelect } from "@/components/CategorySelect";
 
 export function HomePage() {
 	const { data: products, isLoading: areProductsLoading } = useGetProducts();
@@ -111,22 +103,10 @@ export function HomePage() {
 				</div>
 				<div className="grid w-72 items-center gap-1.5">
 					<Label>Kategoria</Label>
-					<Select onValueChange={handleSearchCategory}>
-						<SelectTrigger>
-							<SelectValue placeholder="Wybierz kategorię" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								<SelectLabel>Wybierz kategorię</SelectLabel>
-								<SelectItem value="all">Wszystko</SelectItem>
-								{Object.keys(categories).map((category) => (
-									<SelectItem key={`category-${category}`} value={category} className="capitalize">
-										{category}
-									</SelectItem>
-								))}
-							</SelectGroup>
-						</SelectContent>
-					</Select>
+					<CategorySelect
+						onValueChange={handleSearchCategory}
+						categories={Object.keys(categories)}
+					/>
 				</div>
 			</form>
 			<main className="w-full">

@@ -15,5 +15,10 @@ export type CartItem = {
 	quantity: number;
 };
 
+export type Category = {
+	categoryid: string;
+	name: string;
+};
+
 export type ProductInsert = Omit<Product, "productid">;
 export type ProductUpdate = Omit<Partial<Product>, "productid"> & Pick<Product, "productid">;

@@ -5,7 +5,7 @@ import { Toaster } from "@/components/UI/Toaster";
 import { Header } from "@/components/Header";
 
 export function RootLayout() {
-	const cart = useAppSelector((state) => state.cart.cart);
+	const cart = useAppSelector((state) => state.cart);
 	const totalCartItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
 
 	return (

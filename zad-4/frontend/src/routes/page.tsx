@@ -1,3 +1,4 @@
+import { ShoppingCartIcon } from "lucide-react";
 import {
 	Table,
 	TableBody,
@@ -29,28 +30,33 @@ export function HomePage() {
 	}
 
 	return (
-		<Table>
-			<TableCaption />
-			<TableHeader>
-				<TableRow>
-					<TableHead>Nazwa</TableHead>
-					<TableHead>Opis</TableHead>
-					<TableHead>Cena</TableHead>
-					<TableHead></TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				{products.map(({ productid, name, description, unitprice }) => (
-					<TableRow key={productid}>
-						<TableCell>{name}</TableCell>
-						<TableCell>{description}</TableCell>
-						<TableCell>{formatPrice(parseInt(unitprice))}</TableCell>
-						<TableCell>
-							<Button onClick={() => addToCartHandle(productid)}>Dodaj do koszyka</Button>
-						</TableCell>
+		<main className="mx-auto w-full max-w-screen-md">
+			<Table>
+				<TableCaption />
+				<TableHeader>
+					<TableRow>
+						<TableHead>Nazwa</TableHead>
+						<TableHead>Opis</TableHead>
+						<TableHead>Cena</TableHead>
+						<TableHead></TableHead>
 					</TableRow>
-				))}
-			</TableBody>
-		</Table>
+				</TableHeader>
+				<TableBody>
+					{products.map(({ productid, name, description, unitprice }) => (
+						<TableRow key={productid}>
+							<TableCell>{name}</TableCell>
+							<TableCell>{description}</TableCell>
+							<TableCell>{formatPrice(parseInt(unitprice))}</TableCell>
+							<TableCell>
+								<Button onClick={() => addToCartHandle(productid)}>
+									Add
+									<ShoppingCartIcon className="ml-2" size={16} />
+								</Button>
+							</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</main>
 	);
 }

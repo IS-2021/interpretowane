@@ -3,14 +3,36 @@ import "@fontsource-variable/inter";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
-import { App } from "@/App";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { store } from "@/store/store";
+import { HomePage } from "@/routes/page";
+import { Error } from "@/routes/error";
+import { RootLayout } from "@/routes/layout";
+import { CartPage } from "@/routes/cart/page";
+
+const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <RootLayout />,
+		errorElement: <Error />,
+		children: [
+			{
+				path: "/",
+				element: <HomePage />,
+			},
+			{
+				path: "cart",
+				element: <CartPage />,
+			},
+		],
+	},
+]);
 
 // eslint-disable-next-line import/no-named-as-default-member
 ReactDOM.createRoot(document.querySelector("#root")!).render(
 	<React.StrictMode>
 		<ReduxProvider store={store}>
-			<App />
+			<RouterProvider router={router} />
 		</ReduxProvider>
 	</React.StrictMode>,
 );

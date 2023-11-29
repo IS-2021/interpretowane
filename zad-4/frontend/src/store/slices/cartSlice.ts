@@ -1,12 +1,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { type Product } from "@/api/types";
+import { type CartItem } from "@/api/types";
 
-type CartItemPayload = {
-	quantity: number;
-} & Pick<Product, "productid" | "name" | "unitprice" | "unitweight">;
+type CartItemPayload = CartItem;
 
 type AppState = {
-	cart: Record<string, number>;
+	cart: Record<string, CartItem>;
 };
 
 export const initialAppState: AppState = {
@@ -18,10 +16,12 @@ export const cartSlice = createSlice({
 	initialState: initialAppState,
 	reducers: {
 		addCartItem: (state, { payload }: PayloadAction<CartItemPayload>) => {
-			if (payload.productid in state.cart) {
-				state.cart[payload.productid]++;
+			const cartItem = state.cart[payload.productid];
+			if (cartItem) {
+				cartItem.quantity++;
 			} else {
-				state.cart[payload.productid] = 1;
+				console.log(payload);
+				state.cart[payload.productid] = { ...payload, quantity: 1 };
 			}
 		},
 		removeCartItem: (state, { payload }: PayloadAction<CartItemPayload>) => {
@@ -33,22 +33,28 @@ export const cartSlice = createSlice({
 				return;
 			}
 
-			state.cart[payload.productid] = payload.quantity;
+			const cartItem = state.cart[payload.productid];
+			if (cartItem) {
+				cartItem.quantity = payload.quantity;
+			}
 		},
 		incrementCartItemQuantity: (
 			state,
 			{ payload }: PayloadAction<Pick<CartItemPayload, "productid">>,
 		) => {
-			state.cart[payload.productid]++;
+			const cartItem = state.cart[payload.productid];
+			if (cartItem) {
+				cartItem.quantity++;
+			}
 		},
 		decrementCartItemQuantity: (state, { payload }: PayloadAction<CartItemPayload>) => {
-			const cartItemQuantity = state.cart[payload.productid];
-			if (!cartItemQuantity) {
+			const cartItem = state.cart[payload.productid];
+			if (!cartItem) {
 				return;
-			} else if (cartItemQuantity === 1) {
+			} else if (cartItem.quantity === 1) {
 				delete state.cart[payload.productid];
 			}
-			state.cart[payload.productid] = cartItemQuantity - 1;
+			cartItem.quantity--;
 		},
 	},
 });

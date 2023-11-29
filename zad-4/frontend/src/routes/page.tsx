@@ -10,9 +10,10 @@ import {
 } from "@/components/UI/Table";
 import { useGetProducts } from "@/api/products";
 import { Button } from "@/components/UI/Button";
-import { useAppDispatch } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { addCartItem } from "@/store/slices/cartSlice";
 import { formatPrice } from "@/lib/utils";
+import { type Product } from "@/api/types";
 
 export function HomePage() {
 	const { data: products, isLoading } = useGetProducts();
@@ -20,10 +21,13 @@ export function HomePage() {
 
 	if (isLoading || !products) return null;
 
-	function addToCartHandle(productId: string) {
+	function addToCartHandle(product: Product) {
 		dispatch(
 			addCartItem({
-				productid: productId,
+				productid: product.productid,
+				name: product.name,
+				unitprice: product.unitprice,
+				unitweight: product.unitweight,
 				quantity: 1,
 			}),
 		);
@@ -42,13 +46,13 @@ export function HomePage() {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{products.map(({ productid, name, description, unitprice }) => (
-						<TableRow key={productid}>
-							<TableCell>{name}</TableCell>
-							<TableCell>{description}</TableCell>
-							<TableCell>{formatPrice(parseInt(unitprice))}</TableCell>
+					{products.map((product) => (
+						<TableRow key={product.productid}>
+							<TableCell>{product.name}</TableCell>
+							<TableCell>{product.description}</TableCell>
+							<TableCell>{formatPrice(parseInt(product.unitprice))}</TableCell>
 							<TableCell>
-								<Button onClick={() => addToCartHandle(productid)}>
+								<Button onClick={() => addToCartHandle(product)}>
 									Add
 									<ShoppingCartIcon className="ml-2" size={16} />
 								</Button>

@@ -17,7 +17,7 @@ const router = createBrowserRouter([
 
 export function App() {
 	const cart = useAppSelector((state) => state.cart.cart);
-	const totalCartItems = Object.values(cart).reduce((acc, item) => acc + item, 0);
+	const totalCartItems = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
 
 	return (
 		<div className="mx-auto flex h-0 min-h-screen flex-col">

@@ -56,5 +56,11 @@ INSERT INTO OrderStatuses (orderStatusId, status) VALUES
 ('4fc1ceec-6548-4257-8064-bcea84f8f218', 'ANULOWANE'),
 ('83e2ddaa-b6eb-410d-a7fe-b2418e78f367', 'ZREALIZOWANE');
 
-INSERT INTO Categories (name) VALUES ('Owoce');
-INSERT INTO Products (name, description, unitPrice, unitWeight, categoryId) VALUES ('Jabłka', 'Świeże i smaczne', 500, 1000, (SELECT categoryId FROM Categories WHERE name = 'Owoce'));
+INSERT INTO Categories (name) VALUES ('Owoce'), ('Warzywa');
+INSERT INTO Products (name, description, unitPrice, unitWeight, categoryId) 
+VALUES
+    ('Jabłka', 'Świeże i smaczne, prosto z ogrodu sąsiada', 10000, 1000, (SELECT categoryId FROM Categories WHERE name = 'Owoce')),
+    ('Pomarańcze', 'Bloody oranges!', 16000, 1000, (SELECT categoryId FROM Categories WHERE name = 'Owoce')),
+    ('Wiśnie', 'To te z pestkami. Chyba.', 35000, 1000, (SELECT categoryId FROM Categories WHERE name = 'Owoce')),
+    ('Kalafior', 'Bułka tarta sprzedawana osobno.', 15000, 1000, (SELECT categoryId FROM Categories WHERE name = 'Warzywa')),
+    ('Pomidor', 'Dyskusyjna kategoria, ale bezdyskusyjnie smaczny.', 22000, 1000, (SELECT categoryId FROM Categories WHERE name = 'Warzywa'));

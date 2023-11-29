@@ -1,13 +1,13 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { type Product } from "@/api/types";
 
-interface CartItem {
-	productid: string;
+type CartItemPayload = {
 	quantity: number;
-}
+} & Pick<Product, "productid" | "name" | "unitprice" | "unitweight">;
 
-interface AppState {
+type AppState = {
 	cart: Record<string, number>;
-}
+};
 
 export const initialAppState: AppState = {
 	cart: {},
@@ -17,17 +17,17 @@ export const cartSlice = createSlice({
 	name: "cart",
 	initialState: initialAppState,
 	reducers: {
-		addCartItem: (state, { payload }: PayloadAction<CartItem>) => {
+		addCartItem: (state, { payload }: PayloadAction<CartItemPayload>) => {
 			if (payload.productid in state.cart) {
 				state.cart[payload.productid]++;
 			} else {
 				state.cart[payload.productid] = 1;
 			}
 		},
-		removeCartItem: (state, { payload }: PayloadAction<CartItem>) => {
+		removeCartItem: (state, { payload }: PayloadAction<CartItemPayload>) => {
 			delete state.cart[payload.productid];
 		},
-		setCartItemQuantity: (state, { payload }: PayloadAction<CartItem>) => {
+		setCartItemQuantity: (state, { payload }: PayloadAction<CartItemPayload>) => {
 			if (payload.quantity <= 0) {
 				delete state.cart[payload.productid];
 				return;
@@ -35,10 +35,13 @@ export const cartSlice = createSlice({
 
 			state.cart[payload.productid] = payload.quantity;
 		},
-		incrementCartItemQuantity: (state, { payload }: PayloadAction<Pick<CartItem, "productid">>) => {
+		incrementCartItemQuantity: (
+			state,
+			{ payload }: PayloadAction<Pick<CartItemPayload, "productid">>,
+		) => {
 			state.cart[payload.productid]++;
 		},
-		decrementCartItemQuantity: (state, { payload }: PayloadAction<CartItem>) => {
+		decrementCartItemQuantity: (state, { payload }: PayloadAction<CartItemPayload>) => {
 			const cartItemQuantity = state.cart[payload.productid];
 			if (!cartItemQuantity) {
 				return;

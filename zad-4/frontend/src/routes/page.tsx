@@ -11,6 +11,7 @@ import { useGetProducts } from "@/api/products";
 import { Button } from "@/components/UI/Button";
 import { useAppDispatch } from "@/store/store";
 import { addCartItem } from "@/store/slices/cartSlice";
+import { formatPrice } from "@/lib/utils";
 
 export function HomePage() {
 	const { data: products, isLoading } = useGetProducts();
@@ -43,7 +44,7 @@ export function HomePage() {
 					<TableRow key={productid}>
 						<TableCell>{name}</TableCell>
 						<TableCell>{description}</TableCell>
-						<TableCell>{unitprice}</TableCell>
+						<TableCell>{formatPrice(parseInt(unitprice))}</TableCell>
 						<TableCell>
 							<Button onClick={() => addToCartHandle(productid)}>Dodaj do koszyka</Button>
 						</TableCell>

@@ -37,6 +37,7 @@ import { Input } from "@/components/UI/Input";
 import { toast } from "@/components/UI/useToast";
 import { createOrder } from "@/api/orders";
 import { type CreateOrderData } from "@/api/types";
+import { Heading } from "@/components/Heading";
 
 export function CartPage() {
 	const cart = useAppSelector((state) => state.cart);
@@ -87,11 +88,12 @@ export function CartPage() {
 	};
 
 	if (!hasCartItems) {
-		return <p className="text-center">Cart is empty</p>;
+		return <p className="text-center">Koszyk jest pusty</p>;
 	}
 
 	return (
 		<div className="mx-auto w-full max-w-screen-md">
+			<Heading className="mb-4">Twój koszyk</Heading>
 			<main className="w-full">
 				{hasCartItems && (
 					<Table>
@@ -146,6 +148,8 @@ export function CartPage() {
 					</Table>
 				)}
 			</main>
+
+			<Heading className="mb-4">Złóż zamówienie</Heading>
 			<div>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>

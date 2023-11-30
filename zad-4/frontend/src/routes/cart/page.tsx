@@ -1,4 +1,7 @@
 import { MinusCircleIcon, PlusCircleIcon, TrashIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 import {
 	Table,
 	TableBody,
@@ -12,16 +15,46 @@ import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/UI/Button";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
+	clearCart,
 	decrementCartItemQuantity,
 	incrementCartItemQuantity,
 	removeCartItem,
 } from "@/store/slices/cartSlice";
+import {
+	createOrderDefaultValues,
+	type CreateOrderSchema,
+	createOrderSchema,
+} from "@/routes/cart/schema";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/UI/Form";
+import { Input } from "@/components/UI/Input";
+import { toast } from "@/components/UI/useToast";
+import { createOrder } from "@/api/orders";
+import { type CreateOrderData } from "@/api/types";
 
 export function CartPage() {
 	const cart = useAppSelector((state) => state.cart);
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+
+	const form = useForm<CreateOrderSchema>({
+		resolver: zodResolver(createOrderSchema),
+		defaultValues: createOrderDefaultValues,
+	});
 
 	const hasCartItems = Object.keys(cart).length > 0;
+	const totalPrice = formatPrice(
+		Object.values(cart).reduce(
+			(acc, product) => acc + parseInt(product.unitprice) * product.quantity,
+			0,
+		),
+	);
 
 	function incrementProductQuantity(productId: string) {
 		dispatch(incrementCartItemQuantity({ productid: productId }));
@@ -34,6 +67,24 @@ export function CartPage() {
 	function removeProduct(productId: string) {
 		dispatch(removeCartItem({ productid: productId }));
 	}
+
+	const onSubmit = async ({ user }: CreateOrderSchema) => {
+		const orderData: CreateOrderData = {
+			user,
+			items: Object.entries(cart).map(([productId, product]) => ({
+				productid: productId,
+				quantity: product.quantity,
+				unitprice: parseInt(product.unitprice),
+			})),
+		};
+
+		const res = await createOrder(orderData);
+		if (res.ok) {
+			toast({ description: "Zamówienie złożone pomyślnie", variant: "success" });
+			dispatch(clearCart());
+			navigate("/");
+		}
+	};
 
 	if (!hasCartItems) {
 		return <p className="text-center">Cart is empty</p>;
@@ -95,6 +146,64 @@ export function CartPage() {
 					</Table>
 				)}
 			</main>
+			<div>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)}>
+						<div className="mb-2">
+							<FormField
+								control={form.control}
+								name="user.username"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Nazwa użytkownika</FormLabel>
+										<FormControl>
+											<Input {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+						<div className="mb-2">
+							<FormField
+								control={form.control}
+								name="user.email"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>E-Mail</FormLabel>
+										<FormControl>
+											<Input {...field} type="email" />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+						<div className="mb-2">
+							<FormField
+								control={form.control}
+								name="user.telephone"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Numer telefonu</FormLabel>
+										<FormControl>
+											<Input {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+
+						<div className="flex justify-between text-sm">
+							<p>Łączna wartość koszyka:</p>
+							<p className="font-bold">{totalPrice}</p>
+						</div>
+
+						<Button className="mt-2 w-full">Zamów</Button>
+					</form>
+				</Form>
+			</div>
 		</div>
 	);
 }

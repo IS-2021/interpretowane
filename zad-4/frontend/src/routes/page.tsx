@@ -1,5 +1,4 @@
 import { ShoppingCartIcon } from "lucide-react";
-import { useState } from "react";
 import {
 	Table,
 	TableBody,
@@ -19,32 +18,18 @@ import { Label } from "@/components/UI/Label";
 import { Input } from "@/components/UI/Input";
 import { useGetCategories } from "@/api/categories";
 import { CategorySelect } from "@/components/CategorySelect";
+import { useFilteredProducts } from "@/hooks/useFilteredProducts";
 
 export function HomePage() {
 	const { data: products, isLoading: areProductsLoading } = useGetProducts();
 	const { data: categories, isLoading: areCategoriesLoading } = useGetCategories();
+	const { filteredProducts, handleSearchName, handleSearchCategory } = useFilteredProducts(
+		products ?? [],
+	);
 
-	const [filters, setFilters] = useState({
-		category: "all",
-		name: "",
-	});
 	const dispatch = useAppDispatch();
 
 	if (areProductsLoading || !products || areCategoriesLoading || !categories) return null;
-
-	const filteredProducts = products.filter((product) => {
-		let isCategoryMatch = true;
-		if (filters.category !== "all") {
-			isCategoryMatch = product.categoryid === filters.category;
-		}
-
-		let isNameMatch = true;
-		if (filters.name !== "") {
-			isNameMatch = product.name.toLowerCase().includes(filters.name.toLowerCase());
-		}
-
-		return isNameMatch && isCategoryMatch;
-	});
 
 	function handleAddToCart(product: Product) {
 		dispatch(
@@ -57,42 +42,6 @@ export function HomePage() {
 			}),
 		);
 	}
-
-	function handleSearchName(event: React.ChangeEvent<HTMLInputElement>) {
-		event.preventDefault();
-
-		const value = event.target.value;
-		if (value.trim() !== "") {
-			setFilters({
-				...filters,
-				name: value,
-			});
-		} else {
-			setFilters({
-				...filters,
-				name: "",
-			});
-		}
-	}
-
-	const handleSearchCategory = (value: string) => {
-		const inputCategory = value.toLowerCase();
-
-		const categoryId = categories[inputCategory];
-		if (!categoryId) {
-			setFilters({
-				...filters,
-				category: "all",
-			});
-
-			return;
-		}
-
-		setFilters({
-			...filters,
-			category: categoryId,
-		});
-	};
 
 	return (
 		<div className="mx-auto w-full max-w-screen-md">

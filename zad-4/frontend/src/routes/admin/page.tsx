@@ -22,69 +22,19 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Alert, AlertDescription, AlertTitle } from "@/components/UI/Alert";
 import { ApiError } from "@/lib/fetcher";
 import { toast } from "@/components/UI/useToast";
+import { useFilteredProducts } from "@/hooks/useFilteredProducts";
 
 export function AdminPage() {
 	const { data: products, isLoading: areProductsLoading, mutate } = useGetProducts();
 	const { data: categories, isLoading: areCategoriesLoading } = useGetCategories();
+	const { filteredProducts, handleSearchName, handleSearchCategory } = useFilteredProducts(
+		products ?? [],
+	);
 
-	const [filters, setFilters] = useState({
-		category: "all",
-		name: "",
-	});
 	const [productCategory, setProductCategory] = useState("");
 	const [errorMessage, setErrorMessage] = useState("");
 
 	if (areProductsLoading || !products || areCategoriesLoading || !categories) return null;
-
-	const filteredProducts = products.filter((product) => {
-		let isCategoryMatch = true;
-		if (filters.category !== "all") {
-			isCategoryMatch = product.categoryid === filters.category;
-		}
-
-		let isNameMatch = true;
-		if (filters.name !== "") {
-			isNameMatch = product.name.toLowerCase().includes(filters.name.toLowerCase());
-		}
-
-		return isNameMatch && isCategoryMatch;
-	});
-
-	function handleSearchName(event: React.ChangeEvent<HTMLInputElement>) {
-		event.preventDefault();
-
-		const value = event.target.value;
-		if (value.trim() !== "") {
-			setFilters({
-				...filters,
-				name: value,
-			});
-		} else {
-			setFilters({
-				...filters,
-				name: "",
-			});
-		}
-	}
-
-	const handleSearchCategory = (value: string) => {
-		const inputCategory = value.toLowerCase();
-
-		const categoryId = categories[inputCategory];
-		if (!categoryId) {
-			setFilters({
-				...filters,
-				category: "all",
-			});
-
-			return;
-		}
-
-		setFilters({
-			...filters,
-			category: categoryId,
-		});
-	};
 
 	const handleProductEdit = async (event: React.FormEvent<HTMLFormElement>, product: Product) => {
 		event.preventDefault();

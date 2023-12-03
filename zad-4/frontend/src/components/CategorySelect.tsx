@@ -23,8 +23,6 @@ export function CategorySelect({
 }: CategorySelectProps) {
 	showAll = showAll ?? true;
 
-	console.log(defaultValue, categories);
-
 	return (
 		<Select defaultValue={defaultValue} onValueChange={onValueChange}>
 			<SelectTrigger>

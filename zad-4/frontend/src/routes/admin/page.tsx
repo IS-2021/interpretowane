@@ -1,4 +1,4 @@
-import { PencilIcon } from "lucide-react";
+import { AlertTriangleIcon, PencilIcon } from "lucide-react";
 import { useState } from "react";
 import {
 	Table,
@@ -19,6 +19,9 @@ import { useGetCategories } from "@/api/categories";
 import { CategorySelect } from "@/components/CategorySelect";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/Tabs";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/UI/Sheet";
+import { Alert, AlertDescription, AlertTitle } from "@/components/UI/Alert";
+import { ApiError } from "@/lib/fetcher";
+import { toast } from "@/components/UI/useToast";
 
 export function AdminPage() {
 	const { data: products, isLoading: areProductsLoading, mutate } = useGetProducts();
@@ -29,6 +32,7 @@ export function AdminPage() {
 		name: "",
 	});
 	const [productCategory, setProductCategory] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
 
 	if (areProductsLoading || !products || areCategoriesLoading || !categories) return null;
 
@@ -90,7 +94,6 @@ export function AdminPage() {
 		delete productUpdateData["categoryname"];
 
 		const formData = new FormData(event.target as HTMLFormElement);
-		console.log(formData);
 
 		if (formData.get("unitprice")) {
 			productUpdateData.unitprice = formData.get("unitprice") as string;
@@ -104,13 +107,21 @@ export function AdminPage() {
 			setProductCategory("");
 		}
 
-		const res = await updateProduct(productUpdateData);
-		if (res.ok) {
-			await mutate();
+		try {
+			const res = await updateProduct(productUpdateData);
+			if (res.ok) {
+				await mutate();
+				setErrorMessage("");
+				toast({ description: "Zapisano zmiany", variant: "success" });
+			}
+		} catch (error) {
+			if (error instanceof ApiError) {
+				console.warn(error);
+				const data = (await error.response.json()) as { message: string };
+				setErrorMessage(data.message);
+			}
 		}
 	};
-
-	console.log(categories);
 
 	return (
 		<div className="mx-auto w-full max-w-screen-md">
@@ -168,6 +179,13 @@ export function AdminPage() {
 														<SheetTitle>Edytuj {product.name}</SheetTitle>
 													</SheetHeader>
 													<div>
+														{errorMessage && (
+															<Alert variant="destructive">
+																<AlertTriangleIcon className="h-4 w-4" />
+																<AlertTitle>Wystąpił błąd</AlertTitle>
+																<AlertDescription>{errorMessage}</AlertDescription>
+															</Alert>
+														)}
 														<form onSubmit={(event) => handleProductEdit(event, product)}>
 															<div className="mb-4">
 																<Label className="mb-4">Cena jednostkowa [grosz]</Label>

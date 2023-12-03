@@ -17,12 +17,16 @@ const fastify = Fastify({
 
 await fastify.register(cors, (): FastifyCorsOptionsDelegateCallback => {
 	return (req, callback) => {
+		if (!req.headers.origin) {
+			return callback(null, true);
+		}
+
 		const corsOptions = {
 			origin: false,
 			credentials: true,
 		};
 
-		const origin = new URL(req.headers.origin as string);
+		const origin = new URL(req.headers.origin);
 		if (origin.port === ADMIN_PORT) {
 			console.log("Admin access detected");
 			console.log(req.method, req.url);

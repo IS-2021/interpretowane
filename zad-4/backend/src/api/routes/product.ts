@@ -65,6 +65,7 @@ export async function productRouter(fastify: FastifyInstance) {
 			try {
 				return await crud.updateProduct({ productid: id, ...product });
 			} catch (err) {
+				console.error(err);
 				return reply.code(404).type("text/json").send("Product not found");
 			}
 		},

@@ -9,6 +9,7 @@ import { HomePage } from "@/routes/page";
 import { Error } from "@/routes/error";
 import { RootLayout } from "@/routes/layout";
 import { CartPage } from "@/routes/cart/page";
+import { AdminPage } from "@/routes/admin/page";
 
 const router = createBrowserRouter([
 	{
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
 			{
 				path: "cart",
 				element: <CartPage />,
+			},
+			{
+				path: "/admin",
+				element: <AdminPage />,
 			},
 		],
 	},

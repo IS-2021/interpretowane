@@ -20,7 +20,7 @@ export function addProduct(product: ProductInsert) {
 }
 
 export function updateProduct(product: ProductUpdate) {
-	const url = new URL(`/products`, baseApiUrl);
+	const url = new URL(`/products/${product.productid}`, baseApiUrl);
 	return customFetch(url, {
 		method: "PUT",
 		body: JSON.stringify(product),

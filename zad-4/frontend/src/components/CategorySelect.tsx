@@ -9,20 +9,31 @@ import {
 } from "@/components/UI/Select";
 
 type CategorySelectProps = {
+	defaultValue?: string;
 	onValueChange: (value: string) => void;
 	categories: string[];
+	showAll?: boolean;
 };
 
-export function CategorySelect({ onValueChange, categories }: CategorySelectProps) {
+export function CategorySelect({
+	defaultValue,
+	onValueChange,
+	categories,
+	showAll,
+}: CategorySelectProps) {
+	showAll = showAll ?? true;
+
+	console.log(defaultValue, categories);
+
 	return (
-		<Select onValueChange={onValueChange}>
+		<Select defaultValue={defaultValue} onValueChange={onValueChange}>
 			<SelectTrigger>
 				<SelectValue placeholder="Wybierz kategorię" />
 			</SelectTrigger>
 			<SelectContent>
 				<SelectGroup>
 					<SelectLabel>Wybierz kategorię</SelectLabel>
-					<SelectItem value="all">Wszystko</SelectItem>
+					{showAll && <SelectItem value="all">Wszystko</SelectItem>}
 					{categories.map((category) => (
 						<SelectItem key={`category-${category}`} value={category} className="capitalize">
 							{category}

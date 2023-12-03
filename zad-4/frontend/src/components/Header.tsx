@@ -1,6 +1,6 @@
 import { HomeIcon, ShoppingCart } from "lucide-react";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Heading } from "@/components/Heading";
 
 type HeaderProps = {
@@ -8,10 +8,16 @@ type HeaderProps = {
 };
 
 export function Header({ totalCartItems }: HeaderProps) {
+	const location = useLocation();
+
+	const isOnAdminPage = location.pathname === "/admin";
+	const heading = isOnAdminPage ? "Panel sklepu" : "Sklep internetowy";
+	const logoHref = isOnAdminPage ? "/admin" : "/";
+
 	return (
 		<header className="flex items-center justify-between bg-neutral-900 px-10 py-4 text-white">
-			<Link to="/">
-				<Heading>Sklep internetowy</Heading>
+			<Link to={logoHref}>
+				<Heading>{heading}</Heading>
 			</Link>
 			<nav className="flex items-center gap-3">
 				<Link to="/">

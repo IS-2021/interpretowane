@@ -2,7 +2,19 @@ import { db } from "@/database/db";
 import type { NewProduct, ProductUpdate } from "@/database/types";
 
 export async function getAllProducts() {
-	return db.selectFrom("products").selectAll().execute();
+	return db
+		.selectFrom("products as p")
+		.leftJoin("categories as c", "p.categoryid", "c.categoryid")
+		.select([
+			"p.productid",
+			"p.name",
+			"p.description",
+			"p.unitprice",
+			"p.unitweight",
+			"p.categoryid",
+			"c.name as categoryname",
+		])
+		.execute();
 }
 
 export async function getProductById(productId: string) {

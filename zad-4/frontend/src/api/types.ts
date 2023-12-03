@@ -23,6 +23,13 @@ export type Category = {
 	name: string;
 };
 
+export type Order = {
+	orderid: string;
+	approvaldate: string | null;
+	orderstatusid: string;
+	userid: string;
+};
+
 export type ProductInsert = Omit<Product, "productid">;
 export type ProductUpdate = Omit<Partial<Product>, "productid"> & Pick<Product, "productid">;
 

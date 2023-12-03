@@ -1,6 +1,11 @@
+import useSWR from "swr";
 import { baseApiUrl } from "@/lib/constants";
-import { customFetch } from "@/lib/fetcher";
-import { type CreateOrderData } from "@/api/types";
+import { customFetch, fetcher, type FetchError } from "@/lib/fetcher";
+import { type CreateOrderData, type Order } from "@/api/types";
+
+export function useGetOrders() {
+	return useSWR<Order[], FetchError>(`/orders`, fetcher);
+}
 
 export function createOrder(orderData: CreateOrderData) {
 	const url = new URL(`/orders`, baseApiUrl);

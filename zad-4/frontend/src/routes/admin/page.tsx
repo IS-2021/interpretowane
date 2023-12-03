@@ -38,6 +38,7 @@ export function AdminPage() {
 						<TabsTrigger value="orders">Zamówienia</TabsTrigger>
 						<TabsTrigger value="products">Produkty</TabsTrigger>
 					</TabsList>
+					<TabsContent value="orders"></TabsContent>
 					<TabsContent value="products">
 						<form className="mb-4 flex gap-2">
 							<div className="grid w-full items-center gap-1.5">

@@ -20,17 +20,21 @@ export function Header({ totalCartItems }: HeaderProps) {
 				<Heading>{heading}</Heading>
 			</Link>
 			<nav className="flex items-center gap-3">
-				<Link to="/">
-					<HomeIcon />
-				</Link>
-				<Link to="/cart">
-					<button className="relative block">
-						<span className="absolute right-[-6px] top-[-6px] flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-black">
-							{totalCartItems}
-						</span>
-						<ShoppingCart />
-					</button>
-				</Link>
+				{isOnAdminPage && (
+					<Link to="/">
+						<HomeIcon />
+					</Link>
+				)}
+				{!isOnAdminPage && (
+					<Link to="/cart">
+						<button className="relative block">
+							<span className="absolute right-[-6px] top-[-6px] flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-black">
+								{totalCartItems}
+							</span>
+							<ShoppingCart />
+						</button>
+					</Link>
+				)}
 			</nav>
 		</header>
 	);

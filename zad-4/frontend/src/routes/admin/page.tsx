@@ -16,6 +16,11 @@ import { CategorySelect } from "@/components/CategorySelect";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/Tabs";
 import { useFilteredProducts } from "@/hooks/useFilteredProducts";
 import { EditProductSheet } from "@/components/admin/EditProductSheet";
+import { useGetOrders } from "@/api/orders";
+import { orderStatusIdToString } from "@/lib/orderStatus";
+import { EditOrderSheet } from "@/components/admin/EditOrderSheet";
+import { RadioGroup, RadioGroupItem } from "@/components/UI/RadioGroup";
+import { useFilteredOrders } from "@/hooks/useFilteredOrders";
 
 export function AdminPage() {
 	const {
@@ -24,21 +29,84 @@ export function AdminPage() {
 		mutate: mutateProducts,
 	} = useGetProducts();
 	const { data: categories, isLoading: areCategoriesLoading } = useGetCategories();
+	const { data: orders, isLoading: areOrdersLoading, mutate: mutateOrders } = useGetOrders();
 	const { filteredProducts, handleSearchName, handleSearchCategory } = useFilteredProducts(
 		products ?? [],
 	);
+	const { filteredOrders, handleOrderStatusFilter } = useFilteredOrders(orders ?? []);
 
-	if (areProductsLoading || !products || areCategoriesLoading || !categories) return null;
+	if (
+		areProductsLoading ||
+		!products ||
+		areCategoriesLoading ||
+		!categories ||
+		areOrdersLoading ||
+		!orders
+	)
+		return null;
 
 	return (
 		<div className="mx-auto w-full max-w-screen-md">
 			<main className="w-full">
-				<Tabs defaultValue="products">
+				<Tabs defaultValue="orders">
 					<TabsList className="mb-8 grid w-full grid-cols-2">
 						<TabsTrigger value="orders">Zamówienia</TabsTrigger>
 						<TabsTrigger value="products">Produkty</TabsTrigger>
 					</TabsList>
-					<TabsContent value="orders"></TabsContent>
+
+					<TabsContent value="orders">
+						<form className="mb-4 flex gap-2"></form>
+						<RadioGroup
+							defaultValue="all"
+							className="mb-8 grid grid-cols-5"
+							onValueChange={handleOrderStatusFilter}
+						>
+							<div className="flex items-center space-x-2">
+								<RadioGroupItem value="all" id="r0" />
+								<Label htmlFor="r0">Wszystkie</Label>
+							</div>
+							<div className="flex items-center space-x-2">
+								<RadioGroupItem value="cancelled" id="r1" />
+								<Label htmlFor="r1">Anulowane</Label>
+							</div>
+							<div className="flex items-center space-x-2">
+								<RadioGroupItem value="unapproved" id="r2" />
+								<Label htmlFor="r2">Niezatwierdzone</Label>
+							</div>
+							<div className="flex items-center space-x-2">
+								<RadioGroupItem value="approved" id="r3" />
+								<Label htmlFor="r3">Zatwierdzone</Label>
+							</div>
+							<div className="flex items-center space-x-2">
+								<RadioGroupItem value="completed" id="r4" />
+								<Label htmlFor="r4">Zrealizowane</Label>
+							</div>
+						</RadioGroup>
+						<Table>
+							<TableCaption />
+							<TableHeader>
+								<TableRow>
+									<TableHead className="w-32">ID</TableHead>
+									<TableHead>Data zatwierdzenia</TableHead>
+									<TableHead className="w-24">Status</TableHead>
+									<TableHead className="w-24"></TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{filteredOrders.map((order) => (
+									<TableRow key={order.orderid}>
+										<TableCell className="text-xs">{order.orderid}</TableCell>
+										<TableCell>{order.approvaldate ?? "—"}</TableCell>
+										<TableCell>{orderStatusIdToString(order.orderstatusid)}</TableCell>
+										<TableCell>
+											<EditOrderSheet order={order} mutateOrders={mutateOrders} />
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</TabsContent>
+
 					<TabsContent value="products">
 						<form className="mb-4 flex gap-2">
 							<div className="grid w-full items-center gap-1.5">
@@ -58,6 +126,7 @@ export function AdminPage() {
 								/>
 							</div>
 						</form>
+
 						<Table>
 							<TableCaption />
 							<TableHeader>

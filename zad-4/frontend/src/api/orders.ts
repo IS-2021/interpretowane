@@ -18,3 +18,11 @@ export function createOrder(orderData: CreateOrderData) {
 		body: JSON.stringify(orderData),
 	});
 }
+
+export function updateOrder(orderId: string, orderData: CreateOrderData) {
+	const url = new URL(`/orders/${orderId}`, baseApiUrl);
+	return customFetch(url, {
+		method: "PATCH",
+		body: JSON.stringify(orderData),
+	});
+}

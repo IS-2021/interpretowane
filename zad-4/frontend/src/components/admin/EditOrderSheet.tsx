@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/UI/Alert";
 import { Label } from "@/components/UI/Label";
 import { type Order, type OrderWithItems } from "@/api/types";
 import { OrderStatus, orderStatusIdToString } from "@/lib/orderStatus";
-import { useGetOrderById } from "@/api/orders";
+import { updateOrder, useGetOrderById } from "@/api/orders";
 import { formatPrice, formatWeight } from "@/lib/utils";
 
 type EditProductSheetProps = {
@@ -30,7 +30,7 @@ const defaultOrderState = {
 export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps) {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [order, setOrder] = useState<OrderWithStatus>(defaultOrderState);
-	const { data: orderData } = useGetOrderById(orderId);
+	const { data: orderData, mutate: mutateOrder } = useGetOrderById(orderId);
 	const observableOrder = useRef<Observer>(null);
 
 	useEffect(() => {
@@ -43,44 +43,16 @@ export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps)
 		observableOrder.current = jsonpatch.observe(order);
 	}, [order?.orderid]);
 
-	const handleProductEdit = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
+	const handleProductEdit = async () => {
+		const generatedPatch = jsonpatch.generate(observableOrder.current);
 
-		// type ProductUpdateData = Omit<Product, "categoryname"> & Partial<Pick<Product, "categoryname">>;
-		// const productUpdateData: ProductUpdateData = { ...product };
-		// delete productUpdateData["categoryname"];
-		//
-		// const formData = new FormData(event.target as HTMLFormElement);
-		//
-		// if (formData.get("unitprice")) {
-		// 	productUpdateData.unitprice = formData.get("unitprice") as string;
-		// }
-		// if (formData.get("unitweight")) {
-		// 	productUpdateData.unitweight = formData.get("unitweight") as string;
-		// }
-		// const categoryId = categories[productCategory];
-		// if (categoryId) {
-		// 	productUpdateData.categoryid = categoryId;
-		// 	setProductCategory("");
-		// }
-		//
-		// try {
-		// 	const res = await updateProduct(productUpdateData);
-		// 	if (res.ok) {
-		// 		await mutateProducts();
-		// 		setErrorMessage("");
-		// 		toast({ description: "Zapisano zmiany", variant: "success" });
-		// 	}
-		// } catch (error) {
-		// 	if (error instanceof ApiError) {
-		// 		console.warn(error);
-		// 		const data = (await error.response.json()) as { message: string };
-		// 		setErrorMessage(data.message);
-		// 	}
-		// }
+		await mutateOrders();
+		await mutateOrder({ ...order });
+
+		await updateOrder(order.orderid, generatedPatch);
 	};
 
-	const updateOrderStatus = (newStatus: OrderStatus) => {
+	const updateOrderStatus = async (newStatus: OrderStatus) => {
 		order.orderstatusid = newStatus;
 
 		if (newStatus === OrderStatus.APPROVED) {
@@ -91,6 +63,8 @@ export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps)
 			...order,
 			orderstatusid: newStatus,
 		});
+
+		await handleProductEdit();
 	};
 
 	if (!order) return null;
@@ -120,7 +94,7 @@ export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps)
 							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
-					<form onSubmit={handleProductEdit}>
+					<div>
 						<div className="mb-4">
 							{order.approvaldate && (
 								<>
@@ -161,11 +135,17 @@ export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps)
 							)}
 
 							{order.orderstatusid === OrderStatus.APPROVED && (
-								<Button onClick={() => updateOrderStatus(OrderStatus.COMPLETED)}>
+								<Button
+									onClick={() => updateOrderStatus(OrderStatus.COMPLETED)}
+									variant="outline"
+									className="w-full border-2 border-green-500/80 hover:border-green-500"
+								>
 									Oznacz jako zrealizowane
 								</Button>
 							)}
 						</div>
+
+						<div className="mb-4 w-full border-b-2 border-neutral-300"></div>
 
 						<div className="mb-4">
 							<p>Łączna wartość zamówienia: {formatPrice(orderTotalPrice)}</p>
@@ -190,9 +170,7 @@ export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps)
 								);
 							})}
 						</div>
-
-						<Button className="w-full">Zapisz</Button>
-					</form>
+					</div>
 				</div>
 			</SheetContent>
 		</Sheet>

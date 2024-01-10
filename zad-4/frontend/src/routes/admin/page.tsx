@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/Tabs";
 import { useFilteredProducts } from "@/hooks/useFilteredProducts";
 import { EditProductSheet } from "@/components/admin/EditProductSheet";
 import { useGetOrders } from "@/api/orders";
-import { orderStatusIdToString } from "@/lib/orderStatus";
+import { OrderStatus, orderStatusIdToString } from "@/lib/orderStatus";
 import { EditOrderSheet } from "@/components/admin/EditOrderSheet";
 import { RadioGroup, RadioGroupItem } from "@/components/UI/RadioGroup";
 import { useFilteredOrders } from "@/hooks/useFilteredOrders";
@@ -66,19 +66,19 @@ export function AdminPage() {
 								<Label htmlFor="r0">Wszystkie</Label>
 							</div>
 							<div className="flex items-center space-x-2">
-								<RadioGroupItem value="cancelled" id="r1" />
+								<RadioGroupItem value={OrderStatus.CANCELLED} id="r1" />
 								<Label htmlFor="r1">Anulowane</Label>
 							</div>
 							<div className="flex items-center space-x-2">
-								<RadioGroupItem value="unapproved" id="r2" />
+								<RadioGroupItem value={OrderStatus.UNAPPROVED} id="r2" />
 								<Label htmlFor="r2">Niezatwierdzone</Label>
 							</div>
 							<div className="flex items-center space-x-2">
-								<RadioGroupItem value="approved" id="r3" />
+								<RadioGroupItem value={OrderStatus.APPROVED} id="r3" />
 								<Label htmlFor="r3">Zatwierdzone</Label>
 							</div>
 							<div className="flex items-center space-x-2">
-								<RadioGroupItem value="completed" id="r4" />
+								<RadioGroupItem value={OrderStatus.COMPLETED} id="r4" />
 								<Label htmlFor="r4">Zrealizowane</Label>
 							</div>
 						</RadioGroup>

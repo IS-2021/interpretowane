@@ -16,8 +16,16 @@ export async function getOrderById(orderId: string) {
 export async function getOrderItemsByOrderId(orderId: string) {
 	return db
 		.selectFrom("orderitems")
+		.innerJoin("products", "orderitems.productid", "products.productid")
 		.where("orderid", "=", orderId)
-		.select(["orderitemid", "productid", "quantity", "unitprice"])
+		.select([
+			"orderitemid",
+			"products.productid",
+			"quantity",
+			"orderitems.unitprice",
+			"products.unitweight",
+			"products.name",
+		])
 		.execute();
 }
 

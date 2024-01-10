@@ -10,7 +10,7 @@ import { Label } from "@/components/UI/Label";
 import { type Order, type OrderWithItems } from "@/api/types";
 import { OrderStatus, orderStatusIdToString } from "@/lib/orderStatus";
 import { useGetOrderById } from "@/api/orders";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatWeight } from "@/lib/utils";
 
 type EditProductSheetProps = {
 	orderId: string;
@@ -132,8 +132,9 @@ export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps)
 
 						<div className="mb-4">
 							{order.orderstatusid === OrderStatus.UNAPPROVED && (
-								<Alert className="mb-4">
-									<AlertTitle>Uwaga</AlertTitle>
+								<Alert variant="warning" className="mb-4">
+									<AlertTriangleIcon className="h-4 w-4" />
+									<AlertTitle>Uwaga!</AlertTitle>
 									<AlertDescription>
 										Zamówienie nie zostało jeszcze zatwierdzone zatwierdzone!
 									</AlertDescription>
@@ -168,6 +169,26 @@ export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps)
 
 						<div className="mb-4">
 							<p>Łączna wartość zamówienia: {formatPrice(orderTotalPrice)}</p>
+						</div>
+
+						<div className="mb-4">
+							<h1 className="mb-4 text-lg font-semibold">Zamówione produkty</h1>
+							{order.items.map((item) => {
+								return (
+									<div key={item.orderitemid} className="border-1 mb-2 border p-3">
+										<h3 className="text-md mb-4 font-medium">{item.name}</h3>
+										<div className="flex justify-between">
+											<p>
+												{formatPrice(item.unitprice)} x {item.quantity}
+											</p>
+											<p className="text-right font-bold">
+												{formatPrice(item.unitprice * item.quantity)}
+											</p>
+										</div>
+										<p>{formatWeight(item.unitweight)}</p>
+									</div>
+								);
+							})}
 						</div>
 
 						<Button className="w-full">Zapisz</Button>

@@ -38,12 +38,15 @@ export type ProductInsert = Omit<Product, "productid">;
 export type ProductUpdate = Omit<Partial<Product>, "productid"> & Pick<Product, "productid">;
 
 export type OrderItemData = {
-	orderitemid?: string;
+	orderitemid: string;
+	name: string;
+	unitweight: number;
+
 	productid: string;
 	unitprice: number;
 	quantity: number;
 };
 
 export type CreateOrderData = CreateOrderSchema & {
-	items: OrderItemData[];
+	items: Pick<OrderItemData, "productid" | "unitprice" | "quantity">[];
 };

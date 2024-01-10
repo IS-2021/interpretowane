@@ -49,6 +49,18 @@ export async function orderRouter(fastify: FastifyInstance) {
 		return crud.getAllOrders();
 	});
 
+	fastify.get<{ Params: UrlParamsWithId }>("/:id", async (request, response) => {
+		const { id } = request.params;
+		try {
+			const order = await getOrderById(id);
+			const orderItems = await crud.getOrderItemsByOrderId(id);
+
+			return { ...order, items: orderItems };
+		} catch (err) {
+			return response.code(404).type("application/json").send({ error: "Order not found." });
+		}
+	});
+
 	fastify.get<{ Params: UrlParamsWithId }>("/status/:id", async (request) => {
 		const { id } = request.params;
 

@@ -99,7 +99,7 @@ export function AdminPage() {
 										<TableCell>{order.approvaldate ?? "—"}</TableCell>
 										<TableCell>{orderStatusIdToString(order.orderstatusid)}</TableCell>
 										<TableCell>
-											<EditOrderSheet orderData={order} mutateOrders={mutateOrders} />
+											<EditOrderSheet orderId={order.orderid} mutateOrders={mutateOrders} />
 										</TableCell>
 									</TableRow>
 								))}

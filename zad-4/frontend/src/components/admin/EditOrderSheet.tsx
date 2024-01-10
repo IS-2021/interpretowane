@@ -1,25 +1,47 @@
 import { AlertTriangleIcon, PencilIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type KeyedMutator } from "swr";
 import jsonpatch from "fast-json-patch";
+import { type Observer } from "fast-json-patch/index";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/UI/Sheet";
 import { Button } from "@/components/UI/Button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/UI/Alert";
 import { Label } from "@/components/UI/Label";
-import { type Order } from "@/api/types";
+import { type Order, type OrderWithItems } from "@/api/types";
 import { OrderStatus, orderStatusIdToString } from "@/lib/orderStatus";
+import { useGetOrderById } from "@/api/orders";
+import { formatPrice } from "@/lib/utils";
 
 type EditProductSheetProps = {
-	orderData: Order;
+	orderId: string;
 	mutateOrders: KeyedMutator<Order[]>;
 };
 
-type OrderWithStatus = Omit<Order, "orderstatusid"> & { orderstatusid: OrderStatus };
+type OrderWithStatus = Omit<OrderWithItems, "orderstatusid"> & { orderstatusid: OrderStatus };
 
-export function EditOrderSheet({ orderData, mutateOrders }: EditProductSheetProps) {
+const defaultOrderState = {
+	orderid: "",
+	approvaldate: "",
+	orderstatusid: OrderStatus.UNAPPROVED,
+	userid: "",
+	products: [],
+};
+
+export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps) {
 	const [errorMessage, setErrorMessage] = useState("");
-	const [order, setOrder] = useState<OrderWithStatus>(orderData as OrderWithStatus);
-	const observableOrder = useRef(jsonpatch.observe(order));
+	const [order, setOrder] = useState<OrderWithStatus>(defaultOrderState);
+	const { data: orderData } = useGetOrderById(orderId);
+	const observableOrder = useRef<Observer>(null);
+
+	useEffect(() => {
+		setOrder(orderData as OrderWithStatus);
+	}, [orderData?.orderid]);
+
+	useEffect(() => {
+		if (!order) return;
+
+		observableOrder.current = jsonpatch.observe(order);
+	}, [order?.orderid]);
 
 	const handleProductEdit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -70,6 +92,13 @@ export function EditOrderSheet({ orderData, mutateOrders }: EditProductSheetProp
 			orderstatusid: newStatus,
 		});
 	};
+
+	if (!order) return null;
+	if (!order.items?.length) return null;
+
+	const orderTotalPrice = order.items.reduce((acc, product) => {
+		return acc + product.unitprice * product.quantity;
+	}, 0);
 
 	return (
 		<Sheet>
@@ -138,7 +167,7 @@ export function EditOrderSheet({ orderData, mutateOrders }: EditProductSheetProp
 						</div>
 
 						<div className="mb-4">
-							<p>Łączna wartość zamówienia: {1}</p>
+							<p>Łączna wartość zamówienia: {formatPrice(orderTotalPrice)}</p>
 						</div>
 
 						<Button className="w-full">Zapisz</Button>

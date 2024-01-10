@@ -30,10 +30,15 @@ export type Order = {
 	userid: string;
 };
 
+export type OrderWithItems = Order & {
+	items: OrderItemData[];
+};
+
 export type ProductInsert = Omit<Product, "productid">;
 export type ProductUpdate = Omit<Partial<Product>, "productid"> & Pick<Product, "productid">;
 
 export type OrderItemData = {
+	orderitemid?: string;
 	productid: string;
 	unitprice: number;
 	quantity: number;

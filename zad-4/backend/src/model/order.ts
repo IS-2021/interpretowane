@@ -13,6 +13,14 @@ export async function getOrderById(orderId: string) {
 		.executeTakeFirstOrThrow();
 }
 
+export async function getOrderItemsByOrderId(orderId: string) {
+	return db
+		.selectFrom("orderitems")
+		.where("orderid", "=", orderId)
+		.select(["orderitemid", "productid", "quantity", "unitprice"])
+		.execute();
+}
+
 export async function getOrdersByUsername(username: string) {
 	return db
 		.selectFrom("orders")

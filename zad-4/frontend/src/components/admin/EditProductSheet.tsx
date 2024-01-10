@@ -26,7 +26,7 @@ export function EditProductSheet({ product, mutateProducts }: EditProductSheetPr
 
 	if (areCategoriesLoading || !categories) return null;
 
-	const handleProductEdit = async (event: React.FormEvent<HTMLFormElement>, product: Product) => {
+	const handleProductEdit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		type ProductUpdateData = Omit<Product, "categoryname"> & Partial<Pick<Product, "categoryname">>;
@@ -83,7 +83,7 @@ export function EditProductSheet({ product, mutateProducts }: EditProductSheetPr
 							<AlertDescription>{errorMessage}</AlertDescription>
 						</Alert>
 					)}
-					<form onSubmit={(event) => handleProductEdit(event, product)}>
+					<form onSubmit={handleProductEdit}>
 						<div className="mb-4">
 							<Label className="mb-4">Cena jednostkowa [grosz]</Label>
 							<Input type="number" name="unitprice" defaultValue={product.unitprice}></Input>

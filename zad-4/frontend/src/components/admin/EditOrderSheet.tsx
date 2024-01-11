@@ -41,15 +41,15 @@ export function EditOrderSheet({ orderId, mutateOrders }: EditProductSheetProps)
 		if (!order) return;
 
 		observableOrder.current = jsonpatch.observe(order);
-	}, [order?.orderid]);
+	}, [order?.orderid, order?.orderstatusid]);
 
 	const handleProductEdit = async () => {
 		const generatedPatch = jsonpatch.generate(observableOrder.current);
 
+		await updateOrder(order.orderid, generatedPatch);
+
 		await mutateOrders();
 		await mutateOrder({ ...order });
-
-		await updateOrder(order.orderid, generatedPatch);
 	};
 
 	const updateOrderStatus = async (newStatus: OrderStatus) => {

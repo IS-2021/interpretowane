@@ -1,0 +1,30 @@
+version: "3.10"
+
+name: "aji-4"
+
+services:
+  postgres:
+    image: postgres:16
+    build:
+      context: ./database
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+
+  adminer:
+    image: wodby/adminer
+    ports:
+      - "8080:9000"
+    environment:
+      # - ADMINER_DEFAULT_TYPE=postgresql
+      # - ADMINER_DEFAULT_SERVER=postgres
+      # - ADMINER_DEFAULT_USER=aji
+      # - ADMINER_DEFAULT_PASSWORD=ajipassword
+      # - ADMINER_DEFAULT_DB=aji
+      - ADMINER_DEFAULT_DB_DRIVER=pgsql
+      - ADMINER_DEFAULT_DB_HOST=postgres
+      - ADMINER_DEFAULT_DB_NAME=aji
+
+volumes:
+  db_volume:

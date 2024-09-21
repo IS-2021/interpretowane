@@ -1,0 +1,236 @@
+{
+	"info": {
+		"_postman_id": "623341e0-1d38-43eb-b60f-91a3825426c1",
+		"name": "API Documentation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30844102"
+	},
+	"item": [
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Get all products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/{{product_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"{{product_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"name\": \"Test product\",\r\n\t\"description\": \"Test description\",\r\n\t\"unitprice\": 100,\r\n\t\"unitweight\": 1000,\r\n\t\"categoryid\": \"609c46fa-1607-48e5-83c5-e5d6b6c11a8f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/{{product_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"{{product_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "1. `GET app_url/products` - zwraca wszystkie produkty\n2. `GET app_url/products/id` - zwraca dane produktu o konkretnym identyfikatorze\n3. `POST app_url/products` - dodaje produkt do bazy (parametry w ciele żądania)\n4. `PUT app_url/products/id` - aktualizuje produkt o konkretnym identyfikatorze, pozostałe parametry produktu w ciele żądania. Można też zrobić `PUT app_url/products` ze wszystkimi parametrami w ciele żądania."
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Get all categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "1. `GET app_url/categories` - zwraca wszystkie kategorie"
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Get all orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all orders with a particular status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/status/f4e28cb9-2c6b-4f6b-b48c-beeeb8f5a216",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"status",
+								"f4e28cb9-2c6b-4f6b-b48c-beeeb8f5a216"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// For new user\r\n// {\r\n//     \"orderstatusid\": \"f4e28cb9-2c6b-4f6b-b48c-beeeb8f5a216\",\r\n//     \"items\": [\r\n//         {\r\n//             \"productid\": \"bd251594-0b7c-4134-b5e6-492ff3d57dc2\",\r\n//             \"quantity\": 1,\r\n//             \"unitprice\": 500\r\n//         }\r\n//     ],\r\n//     \"user\": {\r\n//         \"username\": \"testuser\",\r\n//         \"email\": \"test@example.com\",\r\n//         \"telephone\": \"200242400\"\r\n//     }\r\n// }\r\n\r\n// For existing user\r\n{\r\n    // \"orderstatusid\": \"f4e28cb9-2c6b-4f6b-b48c-beeeb8f5a216\",\r\n    \"items\": [\r\n        {\r\n            \"productid\": \"04edebb1-4e3d-4f46-b8cf-2a34f6d7d387\",\r\n            \"quantity\": 1,\r\n            \"unitprice\": 500\r\n        }\r\n    ],\r\n    \"userid\": \"a846f8b0-913b-4238-a37e-953c45f0968b\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update order",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/orderstatusid\",\r\n        \"value\": \"abada23e-2ffd-4a6c-893d-c8585b3cc78a\"\r\n    },\r\n    {\r\n        \"op\": \"replace\",\r\n        \"path\": \"/approvaldate\",\r\n        \"value\": \"2023-11-16\"\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/orders/0fee06a1-344c-46f6-a003-07416c6e32ef",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"0fee06a1-344c-46f6-a003-07416c6e32ef"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "1. `GET app_url/orders` - zwraca wszystkie zamówienia\n2. `POST app_url/orders` - dodaje zamówienie (parametry w ciele żądania)\n3. `PATCH app_url/orders/id` - zmiana stanu zamówienia o podanym identyfikatorze, dane w formacie JSON PATCH. Dopuszczalne są inne warianty, np. `PUT app_url/orders/id` z nowym stanem i pozostałymi parametrami zamówienia w ciele żądania.\n4. `GET app_url/orders/status/id` - pobranie zamówień z określonym stanem"
+		},
+		{
+			"name": "Order Status",
+			"item": [
+				{
+					"name": "Get all order statuses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "1. `GET app_url/status` - zwraca wszystkie możliwe stany zamówienia"
+		}
+	]
+}
